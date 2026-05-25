@@ -41,6 +41,7 @@ body{
     radial-gradient(1000px 700px at 120% 110%,rgba(34,193,255,.12),transparent 60%),
     var(--bg);
   min-height:100vh;
+  -webkit-text-size-adjust:100%;
 }
 .mi{font-family:'Material Symbols Rounded';font-size:19px;line-height:1;display:inline-flex;vertical-align:middle}
 .container{max-width:1400px;margin:0 auto;padding:22px}
@@ -283,6 +284,33 @@ body{
   .signalBadge{font-size:34px}
   .big{font-size:28px}
   .expRow{grid-template-columns:90px 1fr 40px}
+}
+
+/* iPhone / iOS specific polish */
+@supports (padding: max(0px)) {
+  .container{
+    padding-left:max(10px, env(safe-area-inset-left));
+    padding-right:max(10px, env(safe-area-inset-right));
+    padding-top:max(10px, env(safe-area-inset-top));
+    padding-bottom:max(10px, env(safe-area-inset-bottom));
+  }
+}
+@media (hover:none) and (pointer:coarse) {
+  .tab,.viewBtn,.ctrlBtn,.coinBtn,.vizBtn{
+    min-height:40px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .item,.box,.signalBox,.metric{
+    border-radius:12px;
+  }
+}
+@media screen and (max-width:430px) {
+  .topbar,.card{border-radius:12px}
+  .meta{row-gap:6px}
+  .chartBox{height:280px}
+  .feedBody{max-height:420px}
 }
 </style>
 </head>
