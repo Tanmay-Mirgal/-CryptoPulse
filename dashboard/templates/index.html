@@ -159,6 +159,10 @@ body{
 .metric .v{margin-top:3px;font-family:var(--mono);font-size:15px}
 .helpTip{font-size:12px;color:#c6d9f8;margin-top:8px;padding:8px 10px;border:1px dashed rgba(34,193,255,.4);border-radius:8px;background:rgba(34,193,255,.07);display:none}
 .helpTip.on{display:block}
+.helpOutline{position:relative}
+.helpOutline.on{box-shadow:0 0 0 1px rgba(34,193,255,.45), 0 0 0 4px rgba(34,193,255,.08)}
+.helpBadge{display:none;position:absolute;top:10px;right:10px;font-size:10px;padding:4px 8px;border-radius:999px;border:1px solid rgba(34,193,255,.45);color:#9de7ff;background:rgba(34,193,255,.12)}
+.helpOutline.on .helpBadge{display:inline-flex}
 .dagWrap{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:8px;align-items:center;margin-top:10px}
 .dagNode{padding:10px;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,.03);text-align:center}
 .dagArrow{color:var(--muted);font-size:18px}
@@ -233,7 +237,6 @@ body{
         <div class="coinTabs">
           <button class="coinBtn on" onclick="setCoin('btcusdt', this)">BTC</button>
           <button class="coinBtn" onclick="setCoin('ethusdt', this)">ETH</button>
-          <button class="coinBtn" onclick="setCoin('solusdt', this)">SOL</button>
         </div>
         <div id="ws-pill" class="pill"><span class="dot"></span><span id="ws-lbl">Connecting</span></div>
         <div id="np" class="price">$---</div>
@@ -242,10 +245,10 @@ body{
       </div>
     </header>
     <div class="ctrlBar">
-      <button class="ctrlBtn" id="theme-btn" onclick="toggleTheme(this)">Theme</button>
       <button class="ctrlBtn" id="compact-btn" onclick="toggleCompact(this)">Compact</button>
       <button class="ctrlBtn" id="help-btn" onclick="toggleHelp(this)">Help Mode</button>
     </div>
+    <div class="helpTip" id="global-help-tip">Help Mode ON: highlighted cards now show quick guidance.</div>
     <div class="viewTabs">
       <button class="viewBtn on" onclick="switchView('dashboard', this)">Live Dashboard</button>
       <button class="viewBtn" onclick="switchView('models', this)">Model Center</button>
@@ -261,7 +264,8 @@ body{
     </section>
 
     <section class="layout">
-      <aside class="card signal">
+      <aside class="card signal helpOutline" data-help-wrap>
+        <span class="helpBadge">Signal Guide</span>
         <div class="head"><span class="mi">auto_awesome</span> Current Signal</div>
       <div id="sig" class="signalBadge hold">HOLD</div>
       <div class="conf">Confidence <b id="sig-cf">--%</b></div>
@@ -322,7 +326,8 @@ body{
           </article>
         </div>
 
-        <article class="card chartWrap">
+        <article class="card chartWrap helpOutline" data-help-wrap>
+          <span class="helpBadge">Chart Guide</span>
           <div class="chartHead">
             <div class="chartTitle"><span class="mi">query_stats</span> BTC/USDT Market View (Last 60)</div>
             <div class="tabset">
@@ -347,7 +352,8 @@ body{
     </section>
 
     <section class="bottom">
-      <article class="card list">
+      <article class="card list helpOutline" data-help-wrap>
+        <span class="helpBadge">Pipeline Guide</span>
         <h3><span class="mi">tune</span> Technical Snapshot</h3>
         <div class="item"><div><div class="t">RSI (14)</div><div class="d" id="i-rsi-s">--</div></div><div class="t" id="i-rsi">---</div></div>
         <div class="item"><div><div class="t">MACD</div><div class="d" id="i-macd-s">vs signal</div></div><div class="t" id="i-macd">---</div></div>
@@ -385,7 +391,8 @@ body{
           <div id="run-list"></div>
         </article>
         <div class="modelMain">
-          <article class="card modelTop">
+          <article class="card modelTop helpOutline" data-help-wrap>
+            <span class="helpBadge">Model Guide</span>
             <h3><span class="mi">insights</span> Selected Model Metrics</h3>
             <div class="modelSub" id="sel-run">Choose a run from left panel.</div>
             <div class="tabset" style="margin-top:8px">
@@ -514,12 +521,6 @@ function connectCoinWs(){
   };
 }
 
-function toggleTheme(btn){
-  document.body.classList.toggle('themeLight');
-  btn.classList.toggle('on');
-  applyThemePalette();
-}
-
 function toggleCompact(btn){
   document.body.classList.toggle('compact');
   btn.classList.toggle('on');
@@ -529,6 +530,8 @@ function toggleHelp(btn){
   helpMode = !helpMode;
   btn.classList.toggle('on', helpMode);
   document.querySelectorAll('[data-help]').forEach(el => el.classList.toggle('on', helpMode));
+  document.querySelectorAll('[data-help-wrap]').forEach(el => el.classList.toggle('on', helpMode));
+  document.getElementById('global-help-tip')?.classList.toggle('on', helpMode);
 }
 
 function applyThemePalette(){
