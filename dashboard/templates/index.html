@@ -394,6 +394,85 @@ button { font-family:'Inter',sans-serif; cursor:pointer; border:none; outline:no
 .flash { animation:flash .4s var(--ease); }
 .empty { padding:36px; text-align:center; color:var(--t3); font-size:12px; }
 .empty-icon { font-size:24px; margin-bottom:6px; }
+
+/* ═══════════════════════════════════
+   RESPONSIVENESS (MOBILE & TABLET)
+   ═══════════════════════════════════ */
+@media (max-width: 1024px) {
+  #app { padding: 20px 24px 60px; }
+  .mkt-strip { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .ind-row { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .pred-grid { grid-template-columns: 1fr; gap: 12px; }
+  .model-grid { grid-template-columns: 1fr; gap: 12px; }
+  .main-grid { grid-template-columns: 1fr; gap: 14px; }
+  .ops-flow { flex-direction: column; gap: 6px; }
+  .ops-arrow { transform: rotate(90deg); padding: 6px 0; font-size: 16px; }
+  .d-strip { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  #topbar {
+    flex-direction: column;
+    height: auto;
+    padding: 12px 16px;
+    gap: 8px;
+    align-items: stretch;
+  }
+  .tb-brand {
+    margin-right: 0;
+    justify-content: space-between;
+    width: 100%;
+  }
+  .tb-nav {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 4px 0;
+    width: 100%;
+    gap: 6px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tb-nav::-webkit-scrollbar { display: none; } /* Hide scrollbar for clean app feel */
+  .tn { padding: 5px 12px; font-size: 12px; flex-shrink: 0; }
+  .tb-right {
+    margin-left: 0;
+    width: 100%;
+    justify-content: space-between;
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+    gap: 10px;
+  }
+  
+  #app { padding: 14px 14px 40px; }
+  .sh-label { font-size: 8px; letter-spacing: 1.2px; }
+  .mkt-strip { grid-template-columns: 1fr; gap: 8px; }
+  .ind-row { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .mkt-v { font-size: 20px; }
+  .pbox-val { font-size: 24px; }
+  .perf-val { font-size: 24px; }
+  .sig-main { font-size: 28px; }
+  .kv-grid { grid-template-columns: 1fr; gap: 6px; }
+  
+  /* Tables horizontal overflow handling */
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--r12);
+  }
+  .cmp-table, .dtable {
+    min-width: 600px;
+  }
+  .hist-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .hist-th, .hist-row {
+    min-width: 550px;
+  }
+  .d-strip { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
@@ -520,11 +599,13 @@ button { font-family:'Inter',sans-serif; cursor:pointer; border:none; outline:no
       <span class="tag tag-c">Last 100 records from DB</span>
     </div>
     <div class="cb-0">
-      <div class="hist-th" style="grid-template-columns: 1fr 1fr 1fr 1fr;">
-        <span>Time</span><span>BTC Price</span><span>Signal</span><span>RSI</span>
-      </div>
-      <div style="max-height:420px; overflow-y:auto" id="hist-body">
-        <div class="empty"><div class="empty-icon">⏳</div>Loading history...</div>
+      <div class="hist-table-wrap">
+        <div class="hist-th" style="grid-template-columns: 1fr 1fr 1fr 1fr;">
+          <span>Time</span><span>BTC Price</span><span>Signal</span><span>RSI</span>
+        </div>
+        <div style="max-height:420px; overflow-y:auto" id="hist-body">
+          <div class="empty"><div class="empty-icon">⏳</div>Loading history...</div>
+        </div>
       </div>
     </div>
   </div>
@@ -618,11 +699,13 @@ button { font-family:'Inter',sans-serif; cursor:pointer; border:none; outline:no
       <span class="tag tag-c">Last 100 records from DB</span>
     </div>
     <div class="cb-0">
-      <div class="hist-th" style="grid-template-columns: 1fr 1fr 1fr;">
-        <span>Time</span><span>Actual Price</span><span>Predicted Price</span>
-      </div>
-      <div style="max-height:420px; overflow-y:auto" id="reg-hist-body">
-        <div class="empty"><div class="empty-icon">⏳</div>Loading price history...</div>
+      <div class="hist-table-wrap">
+        <div class="hist-th" style="grid-template-columns: 1fr 1fr 1fr;">
+          <span>Time</span><span>Actual Price</span><span>Predicted Price</span>
+        </div>
+        <div style="max-height:420px; overflow-y:auto" id="reg-hist-body">
+          <div class="empty"><div class="empty-icon">⏳</div>Loading price history...</div>
+        </div>
       </div>
     </div>
   </div>
