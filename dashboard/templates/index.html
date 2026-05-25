@@ -440,7 +440,7 @@ body{
         <article class="card chartWrap helpOutline" data-help-wrap>
           <span class="helpBadge">Chart Guide</span>
           <div class="chartHead">
-            <div class="chartTitle"><span class="mi">query_stats</span> BTC/USDT Market View (Last 60)</div>
+            <div class="chartTitle"><span class="mi">query_stats</span> BTC/USDT Market View (<span id="range-lbl">Last 20</span>)</div>
             <div class="tabset">
               <button class="tab" onclick="setMode('candle', this)">Candles</button>
               <button class="tab on" onclick="setMode('price', this)">Price</button>
@@ -450,9 +450,9 @@ body{
             </div>
           </div>
           <div class="tabset" style="margin-bottom:8px">
-            <button class="tab on" onclick="setRange(60, this)">60</button>
+            <button class="tab" onclick="setRange(60, this)">60</button>
             <button class="tab" onclick="setRange(40, this)">40</button>
-            <button class="tab" onclick="setRange(20, this)">20</button>
+            <button class="tab on" onclick="setRange(20, this)">20</button>
             <button class="tab on" id="ma-short-btn" onclick="toggleOverlay('short', this)">MA Short</button>
             <button class="tab on" id="ma-long-btn" onclick="toggleOverlay('long', this)">MA Long</button>
           </div>
@@ -755,6 +755,7 @@ function setRange(n, btn){
   rangeCount = n;
   btn.parentElement.querySelectorAll('.tab').forEach((t, i)=>{ if(i < 3) t.classList.remove('on'); });
   btn.classList.add('on');
+  set('range-lbl', `Last ${n}`);
   drawChart();
 }
 
