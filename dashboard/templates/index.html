@@ -590,7 +590,7 @@ let vizMode = 'bar';
 let lastFeedTopTime = null;
 let selectedCoin = 'btcusdt';
 let coinWs = null;
-let rangeCount = 60;
+let rangeCount = 20;
 let showShortMA = true;
 let showLongMA = true;
 let helpMode = false;
@@ -873,8 +873,7 @@ function drawChart() {
       const o = Number(k.o), c = Number(k.c), h = Number(k.h), l = Number(k.l);
       const isUp = c >= o;
       const span = Math.max(h - l, 0);
-      const base = Math.max(o, c, 1);
-      const minBody = Math.max(span * 0.22, base * 0.00004); // visual floor for near-flat candles
+      const minBody = Math.max(span * 0.3, 8); // guaranteed visible body in production
       const diff = Math.abs(c - o);
       if (diff >= minBody) {
         return { low: Math.min(o, c), high: Math.max(o, c), up: isUp };
@@ -901,8 +900,8 @@ function drawChart() {
         backgroundColor: bodySet.map(k => k.up ? 'rgba(22,199,132,.8)' : 'rgba(255,93,122,.8)'),
         borderColor: bodySet.map(k => k.up ? '#31f3a4' : '#ff7b96'),
         borderWidth: 1.8,
-        barThickness: 14,
-        maxBarThickness: 16,
+        barThickness: 18,
+        maxBarThickness: 22,
         order: 2
       }
     ];
