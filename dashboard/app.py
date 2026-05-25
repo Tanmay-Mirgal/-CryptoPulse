@@ -25,11 +25,27 @@ DB_URL = DB_URL.replace("&channel_binding=require", "").replace("?channel_bindin
 DAGSHUB_USER  = os.environ.get("DAGSHUB_USERNAME",  "Tanmay-Mirgal")
 DAGSHUB_TOKEN = os.environ.get("DAGSHUB_TOKEN",     "YOUR_DAGSHUB_TOKEN")
 MLFLOW_URI    = "https://dagshub.com/Tanmay-Mirgal/CryptoPulse.mlflow"
+DB_RETRIES = int(os.environ.get("DB_CONNECT_RETRIES", "3"))
+DB_RETRY_DELAY_SEC = float(os.environ.get("DB_CONNECT_RETRY_DELAY_SEC", "1.5"))
+
+_services_started = False
+_services_lock = threading.Lock()
+_binance_started = False
+_mlflow_started = False
 
 # ─── DB ───────────────────────────────────────────────────────────────────────
 def db():
-    return psycopg2.connect(DB_URL, connect_timeout=10,
-                            cursor_factory=psycopg2.extras.RealDictCursor)
+    last_err = None
+    for attempt in range(1, DB_RETRIES + 1):
+        try:
+            return psycopg2.connect(DB_URL, connect_timeout=10,
+                                    cursor_factory=psycopg2.extras.RealDictCursor)
+        except Exception as e:
+            last_err = e
+            print(f"[DB] connect attempt {attempt}/{DB_RETRIES} failed: {e}")
+            if attempt < DB_RETRIES:
+                time.sleep(DB_RETRY_DELAY_SEC)
+    raise last_err
 
 # ─── Binance WebSocket Thread ──────────────────────────────────────────────────
 def _binance_thread():
@@ -65,8 +81,12 @@ def _binance_thread():
             print(f"[WS thread] {e}"); time.sleep(10)
 
 def start_binance():
+    global _binance_started
+    if _binance_started:
+        return
     t = threading.Thread(target=_binance_thread, daemon=True)
     t.start()
+    _binance_started = True
     print("[WS] Binance thread started OK")
 
 # ─── Routes ───────────────────────────────────────────────────────────────────
@@ -75,6 +95,7 @@ def index(): return render_template("index.html")
 
 @app.route("/api/live")
 def api_live():
+    ensure_background_services()
     try:
         conn = db(); cur = conn.cursor()
 
@@ -199,6 +220,7 @@ def api_live():
 
 @app.route("/api/history")
 def api_history():
+    ensure_background_services()
     try:
         conn = db(); cur = conn.cursor()
         cur.execute("""
@@ -295,13 +317,31 @@ def _mlflow_fetcher_thread():
         time.sleep(60)
 
 def start_mlflow_cache():
+    global _mlflow_started
+    if _mlflow_started:
+        return
     t = threading.Thread(target=_mlflow_fetcher_thread, daemon=True)
     t.start()
+    _mlflow_started = True
     print("[MLflow] Background fetcher thread started OK")
+
+
+def ensure_background_services():
+    global _services_started
+    if _services_started:
+        return
+    with _services_lock:
+        if _services_started:
+            return
+        start_mlflow_cache()
+        start_binance()
+        _services_started = True
+        print("[Startup] background services ensured")
 
 
 @app.route("/api/runs")
 def api_runs():
+    ensure_background_services()
     with cached_runs_lock:
         runs = list(cached_runs)
     return jsonify({"ok": True, "runs": runs})
@@ -309,6 +349,7 @@ def api_runs():
 
 @app.route("/api/pipeline")
 def api_pipeline():
+    ensure_background_services()
     try:
         conn = db(); cur = conn.cursor()
         cur.execute("SELECT MAX(timestamp) as t, COUNT(*) as c FROM raw_market_ticks;")
@@ -333,11 +374,29 @@ def api_pipeline():
         return jsonify({"ok": False, "error": str(e)}), 500
 
 
+@app.route("/api/health")
+def api_health():
+    ensure_background_services()
+    status = {"ok": True, "services": {
+        "binance_started": _binance_started,
+        "mlflow_started": _mlflow_started,
+    }}
+    try:
+        conn = db()
+        conn.close()
+        status["db"] = "up"
+    except Exception as e:
+        status["ok"] = False
+        status["db"] = f"down: {e}"
+    return jsonify(status), (200 if status["ok"] else 503)
+
+
 @socketio.on("connect")
-def on_connect(): print("[WS] client connected")
+def on_connect():
+    ensure_background_services()
+    print("[WS] client connected")
 
 if __name__ == "__main__":
-    start_mlflow_cache()
-    start_binance()
+    ensure_background_services()
     port = int(os.environ.get("PORT", 5050))
     socketio.run(app, debug=False, host="0.0.0.0", port=port, allow_unsafe_werkzeug=True)
