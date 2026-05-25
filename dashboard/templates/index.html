@@ -768,36 +768,42 @@ function drawChart() {
   };
 
   if (cMode === 'candle') {
-    MC.config.type = 'candlestick';
-    const cset = candleData.slice(-rangeCount).map(k => ({
-      x: Number(k.x),
-      o: Number(k.o),
-      h: Number(k.h),
-      l: Number(k.l),
-      c: Number(k.c)
-    })).filter(k => Number.isFinite(k.o) && Number.isFinite(k.h) && Number.isFinite(k.l) && Number.isFinite(k.c));
-    ds = [{
-      type: 'candlestick',
-      label: 'OHLC',
-      data: cset,
-      parsing: false,
-      color: {
-        up: '#16c784',
-        down: '#ff5d7a',
-        unchanged: '#8fa6c8',
+    // Production-safe candlestick fallback (no financial plugin dependency)
+    MC.config.type = 'bar';
+    const cset = candleData.slice(-rangeCount).filter(k =>
+      Number.isFinite(k.o) && Number.isFinite(k.h) && Number.isFinite(k.l) && Number.isFinite(k.c)
+    );
+    const clabels = cset.map(k => new Date(k.x).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'}));
+    ds = [
+      {
+        type: 'bar',
+        label: 'Wick (Low-High)',
+        data: cset.map(k => [Number(k.l), Number(k.h)]),
+        backgroundColor: 'rgba(180,197,223,.55)',
+        borderColor: 'rgba(180,197,223,.8)',
+        borderWidth: 1,
+        barThickness: 2,
+        maxBarThickness: 2,
+        order: 1
       },
-      borderColor: {
-        up: '#16c784',
-        down: '#ff5d7a',
-        unchanged: '#8fa6c8',
+      {
+        type: 'bar',
+        label: 'OHLC',
+        data: cset.map(k => [Number(k.o), Number(k.c)]),
+        backgroundColor: cset.map(k => Number(k.c) >= Number(k.o) ? 'rgba(22,199,132,.55)' : 'rgba(255,93,122,.55)'),
+        borderColor: cset.map(k => Number(k.c) >= Number(k.o) ? '#16c784' : '#ff5d7a'),
+        borderWidth: 1.4,
+        barThickness: 8,
+        maxBarThickness: 10,
+        order: 2
       }
-    }];
-    MC.options.scales.x.type = 'timeseries';
-    MC.options.scales.x.time = { unit: 'minute', tooltipFormat: 'HH:mm' };
+    ];
+    MC.options.scales.x.type = 'category';
+    MC.options.scales.x.offset = true;
     MC.options.scales.y.ticks.callback = v => '$' + Number(v).toLocaleString();
     if (cset.length) {
-      const lows = cset.map(d => d.l);
-      const highs = cset.map(d => d.h);
+      const lows = cset.map(d => Number(d.l));
+      const highs = cset.map(d => Number(d.h));
       const ymin = Math.min(...lows);
       const ymax = Math.max(...highs);
       MC.options.scales.y.min = ymin * 0.9995;
@@ -806,6 +812,10 @@ function drawChart() {
       delete MC.options.scales.y.min;
       delete MC.options.scales.y.max;
     }
+    MC.data.labels = clabels;
+    MC.data.datasets = ds;
+    MC.update('active');
+    return;
   } else if (cMode === 'price') {
     MC.config.type = 'line';
     delete MC.options.scales.y.min;
@@ -840,7 +850,7 @@ function drawChart() {
     ];
   }
 
-  MC.data.labels = cMode === 'candle' ? [] : labels;
+  MC.data.labels = labels;
   MC.data.datasets = ds;
   if (cMode !== 'candle') {
     MC.options.scales.x.type = 'category';
