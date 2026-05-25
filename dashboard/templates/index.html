@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>CryptoPulse &mdash; MLOps Trading Intelligence</title>
+<title>CryptoPulse — MLOps Trading Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -281,7 +281,7 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
 <!-- ÔòÉÔòÉÔòÉÔòÉ NAV ÔòÉÔòÉÔòÉÔòÉ -->
 <nav>
   <div class="n-logo">
-    <div class="n-icon">&#9889;</div>
+    <div class="n-icon">⚡</div>
     <div class="n-title">Crypto<em>Pulse</em></div>
   </div>
   <div class="n-tabs">
@@ -302,16 +302,16 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
 <main>
 
 <!-- ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
-     PAGE 1 &mdash; DASHBOARD
+     PAGE 1 — DASHBOARD
 ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ -->
 <div id="p-dash" class="page on">
 
   <!-- 24h stat strip (WebSocket live) -->
   <div class="stat-strip">
     <div class="stat">
-      <div class="stat-l">BTC Price &middot; Live</div>
+      <div class="stat-l">BTC Price · Live</div>
       <div class="stat-v cy" id="lv-p">$---</div>
-      <div class="stat-s">Binance &middot; Real-time WebSocket</div>
+      <div class="stat-s">Binance · Real-time WebSocket</div>
     </div>
     <div class="stat">
       <div class="stat-l">24h Change</div>
@@ -353,7 +353,7 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
         <span class="pill pill-p">DIRECTION</span>
       </div>
       <div class="pb-main nt" id="clf-m">---</div>
-      <div class="pb-sub" id="clf-s">Score 0/4 &middot; loading...</div>
+      <div class="pb-sub" id="clf-s">Score 0/4 · loading...</div>
       <div class="kgrid">
         <div class="kv"><div class="kv-l">Score</div><div class="kv-v p" id="k-sc">--/4</div></div>
         <div class="kv"><div class="kv-l">RSI Zone</div><div class="kv-v" id="k-rz">---</div></div>
@@ -365,7 +365,7 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
     <!-- Regression -->
     <div class="pred-box">
       <div class="pb-head">
-        <div class="pb-ico reg">­ƒôê</div>
+        <div class="pb-ico reg">📈</div>
         <div class="pb-meta">
           <div class="pb-type">Regression Model</div>
           <div class="pb-desc">Next candle exact price predict</div>
@@ -394,11 +394,11 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
   </div>
 
   <!-- Chart + Pipeline -->
-  <div class="sec"><div class="sec-lbl">&#128202; Price Chart &middot; Pipeline Status</div><div class="sec-line"></div></div>
+  <div class="sec"><div class="sec-lbl">&#128202; Price Chart · Pipeline Status</div><div class="sec-line"></div></div>
   <div class="dash-grid">
     <div class="card">
       <div class="card-h">
-        <div class="card-title">BTC/USDT &middot; Last 60 min</div>
+        <div class="card-title">BTC/USDT · Last 60 min</div>
         <div class="tab-row">
           <div class="ctab on"  onclick="tab('price',this)">Price</div>
           <div class="ctab"     onclick="tab('rsi',this)">RSI</div>
@@ -414,19 +414,19 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
         <div class="pipe">
           <div class="pipe-item">
             <div class="pipe-ico">&#128229;</div>
-            <div class="pipe-info"><div class="pipe-name">Ingestion</div><div class="pipe-detail" id="pp-i">Binance &rarr; DB &middot; 1 min</div></div>
+            <div class="pipe-info"><div class="pipe-name">Ingestion</div><div class="pipe-detail" id="pp-i">Binance → DB · 1 min</div></div>
             <span class="pipe-badge idle" id="pb-i">idle</span>
           </div>
-          <div class="pipe-arrow">&darr; auto-trigger</div>
+          <div class="pipe-arrow">↓ auto-trigger</div>
           <div class="pipe-item">
             <div class="pipe-ico">&#9881;&#65039;</div>
-            <div class="pipe-info"><div class="pipe-name">Feature Engineering</div><div class="pipe-detail" id="pp-f">RSI &middot; MACD &middot; MA &middot; Targets</div></div>
+            <div class="pipe-info"><div class="pipe-name">Feature Engineering</div><div class="pipe-detail" id="pp-f">RSI · MACD · MA · Targets</div></div>
             <span class="pipe-badge idle" id="pb-f">idle</span>
           </div>
-          <div class="pipe-arrow">&darr; every 6 hrs</div>
+          <div class="pipe-arrow">↓ every 6 hrs</div>
           <div class="pipe-item">
             <div class="pipe-ico">&#129504;</div>
-            <div class="pipe-info"><div class="pipe-name">Model Training</div><div class="pipe-detail" id="pp-m">XGBoost CLF + REG &middot; MLflow</div></div>
+            <div class="pipe-info"><div class="pipe-name">Model Training</div><div class="pipe-detail" id="pp-m">XGBoost CLF + REG · MLflow</div></div>
             <span class="pipe-badge idle" id="pb-m">idle</span>
           </div>
         </div>
@@ -436,7 +436,7 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
 </div>
 
 <!-- ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
-     PAGE 2 &mdash; PREDICTIONS
+     PAGE 2 — PREDICTIONS
 ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ -->
 <div id="p-pred" class="page">
   <div class="p2-grid">
@@ -446,7 +446,7 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
       <div class="card-b">
         <div class="explain-row">
           <div class="ex-block clf">
-            <div class="ex-t p">&#128302; Classification Model &mdash; Direction</div>
+            <div class="ex-t p">&#128302; Classification Model — Direction</div>
             <div class="ex-body">
               Predicts <b>UP or DOWN</b> for next 1-minute candle.<br>
               <code>BUY = 1</code> Next candle <b style="color:var(--green)">UPAR</b> close hoga<br>
@@ -455,10 +455,10 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
             </div>
           </div>
           <div class="ex-block reg">
-            <div class="ex-t c">­ƒôê Regression Model &mdash; Exact Price</div>
+            <div class="ex-t c">📈 Regression Model — Exact Price</div>
             <div class="ex-body">
               Predicts <b>exact dollar value</b> of next candle close.<br>
-              Example: $76,716 &rarr; predicted $76,486<br>
+              Example: $76,716 → predicted $76,486<br>
               Error metric: MAE ~$100-500 for BTC typically
             </div>
           </div>
@@ -498,7 +498,7 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
 
   <!-- History table -->
   <div class="card">
-    <div class="card-h"><div class="card-title">&#128220; Signal History &middot; Last 100</div></div>
+    <div class="card-h"><div class="card-title">&#128220; Signal History · Last 100</div></div>
     <div style="overflow:hidden">
       <div class="hist-header"><span>TIME</span><span>PRICE</span><span>SIGNAL</span><span>RSI</span><span>PRED PRICE</span></div>
       <div style="max-height:400px;overflow-y:auto" id="hist-body"></div>
@@ -507,7 +507,7 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
 </div>
 
 <!-- ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
-     PAGE 3 &mdash; MODELS
+     PAGE 3 — MODELS
 ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ -->
 <div id="p-mdl" class="page">
   <div class="m-grid">
@@ -516,7 +516,7 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
       <div class="card-b"><div class="runs" id="clf-runs"><div class="empty"><div class="empty-ico">&#9203;</div>Loading...</div></div></div>
     </div>
     <div class="card">
-      <div class="card-h"><div class="card-title">­ƒôê Regressor Runs</div><span class="pill pill-c">PRICE MODEL</span></div>
+      <div class="card-h"><div class="card-title">📈 Regressor Runs</div><span class="pill pill-c">PRICE MODEL</span></div>
       <div class="card-b"><div class="runs" id="reg-runs"><div class="empty"><div class="empty-ico">&#9203;</div>Loading...</div></div></div>
     </div>
   </div>
@@ -538,7 +538,7 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
     <a href="https://dagshub.com/Tanmay-Mirgal/CryptoPulse.mlflow" target="_blank"
        style="display:inline-flex;align-items:center;gap:9px;padding:11px 26px;border-radius:11px;background:var(--indigo3);border:1px solid rgba(99,102,241,.25);color:var(--indigo2);font-weight:700;font-size:13px;text-decoration:none;transition:.2s"
        onmouseover="this.style.background='rgba(99,102,241,.18)'" onmouseout="this.style.background='var(--indigo3)'">
-      ­ƒöù Open MLflow on DagsHub &rarr;
+      ­ƒöù Open MLflow on DagsHub →
     </a>
   </div>
 
@@ -552,7 +552,7 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
 
   <div class="card" style="margin-bottom: 20px;">
     <div class="card-h">
-      <div class="card-title">&#128203; engineered_features &middot; Latest 100 Rows</div>
+      <div class="card-title">&#128203; engineered_features · Latest 100 Rows</div>
       <span class="pill pill-g" id="d-cnt">-- rows</span>
     </div>
     <div class="dtable-wrap">
@@ -575,7 +575,7 @@ let cMode = 'price';
 let cData = [];
 
 // ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
-// SOCKET.IO &mdash; Binance Live
+// SOCKET.IO — Binance Live
 // ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
 const io2 = io();
 
@@ -706,16 +706,16 @@ async function loadLive() {
     sb.textContent = clf.signal; sb.className = 'sig-badge ' + clf.signal;
     set('sig-cf', clf.conf + '%');
     set('sig-note',
-      clf.signal === 'BUY'  ? '­ƒôê Bullish indicators &mdash; next candle UPAR close hone ki expect' :
-      clf.signal === 'SELL' ? '­ƒôë Bearish indicators &mdash; next candle NEECHE close hone ki expect' :
-                              '&#9888;&#65039; Mixed signals &mdash; clear direction nahi hai');
+      clf.signal === 'BUY'  ? '📈 Bullish indicators — next candle UPAR close hone ki expect' :
+      clf.signal === 'SELL' ? '📉 Bearish indicators — next candle NEECHE close hone ki expect' :
+                              '⚠️ Mixed signals — clear direction nahi hai');
 
     // Classification
     const cm = document.getElementById('clf-m');
-    cm.textContent = clf.signal === 'BUY'  ? '&uarr; UPAR JAYEGA'   :
-                     clf.signal === 'SELL' ? '&darr; NEECHE JAYEGA' : '&rarr; FLAT RAHEGA';
+    cm.textContent = clf.signal === 'BUY'  ? '↑ UPAR JAYEGA'   :
+                     clf.signal === 'SELL' ? '↓ NEECHE JAYEGA' : '→ FLAT RAHEGA';
     cm.className   = 'pb-main ' + (clf.signal === 'BUY' ? 'up' : clf.signal === 'SELL' ? 'dn' : 'nt');
-    set('clf-s', `Score ${clf.score}/4 &middot; ${clf.conf}% confidence &middot; RSI+MACD+MA`);
+    set('clf-s', `Score ${clf.score}/4 · ${clf.conf}% confidence · RSI+MACD+MA`);
     set('k-sc', clf.score + '/4');
 
     const rz = document.getElementById('k-rz');
@@ -723,11 +723,11 @@ async function loadLive() {
     rz.className   = 'kv-v ' + (clf.rsi_zone === 'OVERSOLD' ? 'g' : clf.rsi_zone === 'OVERBOUGHT' ? 'r' : '');
 
     const mt = document.getElementById('k-mt');
-    mt.textContent = clf.macd_bull ? 'BULLISH &uarr;' : 'BEARISH &darr;';
+    mt.textContent = clf.macd_bull ? 'BULLISH ↑' : 'BEARISH ↓';
     mt.className   = 'kv-v ' + (clf.macd_bull ? 'g' : 'r');
 
     const at = document.getElementById('k-at');
-    at.textContent = clf.ma_up ? 'UPTREND &uarr;' : 'DOWNTREND &darr;';
+    at.textContent = clf.ma_up ? 'UPTREND ↑' : 'DOWNTREND ↓';
     at.className   = 'kv-v ' + (clf.ma_up ? 'g' : 'r');
 
     // Regression
@@ -747,12 +747,12 @@ async function loadLive() {
     const ri = document.getElementById('i-rsi');
     ri.textContent = ind.rsi;
     ri.style.color = ind.rsi < 40 ? 'var(--green)' : ind.rsi > 60 ? 'var(--red)' : 'var(--t1)';
-    set('i-rsi-s', ind.rsi < 40 ? '&#9889; Oversold' : ind.rsi > 60 ? '&uarr; Overbought' : 'Neutral (40ÔÇô60)');
+    set('i-rsi-s', ind.rsi < 40 ? '⚡ Oversold' : ind.rsi > 60 ? '↑ Overbought' : 'Neutral (40-60)');
 
     const mi = document.getElementById('i-macd');
     mi.textContent = ind.macd;
     mi.style.color = ind.macd > ind.macd_s ? 'var(--green)' : 'var(--red)';
-    set('i-macd-s', ind.macd > ind.macd_s ? '&uarr; Above signal' : '&darr; Below signal');
+    set('i-macd-s', ind.macd > ind.macd_s ? '↑ Above signal' : '↓ Below signal');
 
     set('i-mas', '$' + parseInt(ind.ma_s).toLocaleString());
     set('i-mal', '$' + parseInt(ind.ma_l).toLocaleString());
@@ -786,14 +786,14 @@ async function loadPipe() {
     const d = await fetch('/api/pipeline').then(r => r.json());
     if (!d.ok) return;
     const update = (pi, pb, row, def) => {
-      set(pi, def + ' &middot; ' + row.count + ' rows &middot; ' + row.ts);
+      set(pi, def + ' · ' + row.count + ' rows · ' + row.ts);
       const el = document.getElementById(pb);
       el.textContent = row.status === 'live' ? 'LIVE Ô£ô' : row.status === 'warn' ? 'DELAYED' : 'IDLE';
       el.className   = 'pipe-badge ' + row.status;
     };
-    update('pp-i', 'pb-i', d.ingestion, 'Binance &rarr; DB &middot; 1 min');
-    update('pp-f', 'pb-f', d.features,  'RSI &middot; MACD &middot; MA');
-    update('pp-m', 'pb-m', d.model,     'XGBoost &middot; 6hrs');
+    update('pp-i', 'pb-i', d.ingestion, 'Binance → DB · 1 min');
+    update('pp-f', 'pb-f', d.features,  'RSI · MACD · MA');
+    update('pp-m', 'pb-m', d.model,     'XGBoost · 6hrs');
   } catch(e) {}
 }
 
@@ -886,12 +886,12 @@ async function loadRuns() {
             <td style="font-size:11px;color:var(--t3)">${r.date}</td>
           </tr>`;
         }).join('')
-      : '<tr><td colspan="6" class="empty">No MLflow runs yet &mdash; training DAG trigger karo</td></tr>';
+      : '<tr><td colspan="6" class="empty">No MLflow runs yet — training DAG trigger karo</td></tr>';
   } catch(e) {}
 }
 
 // ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
-// API: /api/history &rarr; Data page
+// API: /api/history → Data page
 // ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
 async function loadData() {
   try {
@@ -915,7 +915,7 @@ async function loadData() {
 // ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
 // HELPERS
 // ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
-function set(id, val) { const e = document.getElementById(id); if (e) e.textContent = val; }
+function set(id, val) { const e = document.getElementById(id); if (e) e.innerHTML = val; }
 function fmt2(n)       { return parseFloat(n).toLocaleString('en', {minimumFractionDigits:2, maximumFractionDigits:2}); }
 
 // ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
