@@ -1,0 +1,5 @@
+outs:
+- md5: 02b8ac17874c6420f8303a6a183b6b16
+  size: 1930
+  hash: md5
+  path: raw_market_ticks.csv

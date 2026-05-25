@@ -1,0 +1,51 @@
+# airflow_settings.yaml — CryptoPulse MLOps Local Dev Config
+# NOTE: Only for local development (astro dev).
+# Ref: https://www.astronomer.io/docs/astro/cli/develop-project
+
+airflow:
+  connections:
+    - conn_id: neon_postgres
+      conn_type: postgres
+      conn_host: ep-flat-shadow-aq6optjf-pooler.c-8.us-east-1.aws.neon.tech
+      conn_schema: neondb
+      conn_login: neondb_owner
+      conn_password: "YOUR_NEON_DATABASE_PASSWORD"
+      conn_port: 5432
+      conn_extra:
+        sslmode: require
+
+  pools:
+    - pool_name: cryptopulse_pool
+      pool_slot: 5
+      pool_description: Pool for CryptoPulse MLOps pipeline tasks
+
+  variables:
+    # ── Neon PostgreSQL ──
+    - variable_name: NEON_DATABASE_URL
+      variable_value: "postgresql://neondb_owner:YOUR_NEON_DATABASE_PASSWORD@ep-flat-shadow-aq6optjf-pooler.c-8.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+
+    # ── DagsHub / MLflow ──
+    - variable_name: DAGSHUB_USERNAME
+      variable_value: "Tanmay-Mirgal"
+
+    - variable_name: DAGSHUB_TOKEN
+      variable_value: "YOUR_DAGSHUB_TOKEN"
+
+    - variable_name: DAGSHUB_REPO_OWNER
+      variable_value: "Tanmay-Mirgal"
+
+    - variable_name: DAGSHUB_REPO_NAME
+      variable_value: "CryptoPulse"
+
+    # ── AWS / SageMaker ──
+    - variable_name: AWS_ACCESS_KEY_ID
+      variable_value: "YOUR_AWS_ACCESS_KEY_ID"
+
+    - variable_name: AWS_SECRET_ACCESS_KEY
+      variable_value: "YOUR_AWS_SECRET_ACCESS_KEY"
+
+    - variable_name: AWS_DEFAULT_REGION
+      variable_value: "us-east-1"
+
+    - variable_name: SAGEMAKER_ROLE_ARN
+      variable_value: "arn:aws:iam::YOUR_AWS_ACCOUNT_ID:role/YOUR_SAGEMAKER_ROLE"

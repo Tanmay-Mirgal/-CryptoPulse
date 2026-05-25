@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# Environment / Secrets
+.env
+*.env
+
+# Airflow local DB & logs
+logs/
+airflow.db
+airflow.cfg
+standalone_admin_password.txt
+webserver_config.py
+unittests.cfg
+
+# Astro / Docker
+.astro/
+
+# DVC - actual CSV data is tracked by DVC, not git
+# data/ folder ki actual files DVC handles karti hai (.dvc files git mein hain)
+/data/*.csv
+
+# MLflow artifacts (local)
+mlruns/
+mlartifacts/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
