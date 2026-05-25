@@ -3,10 +3,10 @@ CryptoPulse Dashboard — Flask + SocketIO
 Live BTC/USDT from Binance WebSocket → push to browser
 All predictions from Neon DB
 """
-import os, json, threading, time
+import os, json, threading, time, requests
 import psycopg2, psycopg2.extras
 from datetime import datetime, timezone
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 from flask_socketio import SocketIO
 from dotenv import load_dotenv
 
@@ -241,6 +241,65 @@ def api_history():
             "sig":    "BUY" if r["target_label"] == 1 else "SELL",
             "pred":   round(float(r["next_close_price"]), 2) if r["next_close_price"] else None,
         } for r in rows]})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.route("/api/candles")
+def api_candles():
+    ensure_background_services()
+    try:
+        limit = request.args.get("limit", default=120, type=int)
+        limit = max(20, min(limit, 500))
+        symbol = (request.args.get("symbol", default="BTCUSDT", type=str) or "BTCUSDT").upper()
+
+        # Primary source: Binance 1m klines (production-grade candlestick data)
+        try:
+            br = requests.get(
+                "https://api.binance.com/api/v3/klines",
+                params={"symbol": symbol, "interval": "1m", "limit": limit},
+                timeout=10,
+            )
+            br.raise_for_status()
+            arr = br.json()
+            if isinstance(arr, list) and arr:
+                candles = [{
+                    "x": datetime.utcfromtimestamp(int(k[0]) / 1000).isoformat(),
+                    "o": float(k[1]),
+                    "h": float(k[2]),
+                    "l": float(k[3]),
+                    "c": float(k[4]),
+                    "v": float(k[5]),
+                    "source": "binance",
+                } for k in arr]
+                return jsonify({"ok": True, "count": len(candles), "candles": candles, "source": "binance"})
+        except Exception as be:
+            print(f"[Candles] Binance fetch failed, fallback DB: {be}")
+
+        # Fallback source: raw_market_ticks from DB
+        conn = db(); cur = conn.cursor()
+        cur.execute(f"""
+            SELECT timestamp, open_price, high_price, low_price, close_price, volume
+            FROM raw_market_ticks
+            WHERE open_price IS NOT NULL
+              AND high_price IS NOT NULL
+              AND low_price IS NOT NULL
+              AND close_price IS NOT NULL
+            ORDER BY timestamp DESC
+            LIMIT {limit};
+        """)
+        rows = list(reversed(cur.fetchall()))
+        conn.close()
+        candles = [{
+            "x": r["timestamp"].isoformat(),
+            "o": float(r["open_price"]),
+            "h": float(r["high_price"]),
+            "l": float(r["low_price"]),
+            "c": float(r["close_price"]),
+            "v": float(r["volume"]) if r["volume"] is not None else 0.0,
+            "source": "db",
+        } for r in rows]
+        return jsonify({"ok": True, "count": len(candles), "candles": candles, "source": "db"})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)}), 500
 

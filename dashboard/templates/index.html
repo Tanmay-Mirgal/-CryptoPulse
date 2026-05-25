@@ -8,7 +8,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Material+Symbols+Rounded:FILL@1" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.3.1/dist/chartjs-adapter-luxon.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.2.1/dist/chartjs-chart-financial.min.js"></script>
 <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 <style>
 :root{
@@ -24,6 +27,10 @@
   --bad:#ff5d7a;
   --warn:#f8b34a;
   --mono:'IBM Plex Mono', monospace;
+  --chart-grid:rgba(140,161,194,.10);
+  --chart-tick:#8fa6c8;
+  --chart-border:rgba(140,161,194,.14);
+  --tab-active-bg:rgba(58,114,255,.2);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{
@@ -114,7 +121,7 @@ body{
 .chartTitle{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
 .tabset{display:flex;gap:6px}
 .tab{font-size:12px;border:1px solid var(--border);background:transparent;color:var(--muted);padding:5px 10px;border-radius:999px;cursor:pointer}
-.tab.on{color:#d8e8ff;background:rgba(58,114,255,.2);border-color:rgba(58,114,255,.5)}
+.tab.on{color:var(--text);background:var(--tab-active-bg);border-color:rgba(58,114,255,.5)}
 .chartBox{height:340px}
 .bottom{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .list{padding:14px}
@@ -164,7 +171,26 @@ body{
 .expLbl{font-size:11px;color:var(--muted)}
 .expBar{height:8px;border-radius:999px;background:rgba(148,163,184,.15);overflow:hidden}
 .expFill{height:100%;background:linear-gradient(90deg,#22c1ff,#3a72ff)}
-.themeLight{--bg:#f3f7ff;--panel:#ffffff;--panel-2:#f7fbff;--border:rgba(20,37,66,.16);--text:#10213d;--muted:#5d7396}
+.themeLight{
+  --bg:#e9eef7;
+  --panel:#ffffff;
+  --panel-2:#f4f8ff;
+  --border:rgba(20,37,66,.14);
+  --text:#10213d;
+  --muted:#536a8d;
+  --brand:#0ea5e9;
+  --brand-2:#2563eb;
+  --chart-grid:rgba(16,33,61,.08);
+  --chart-tick:#3f5679;
+  --chart-border:rgba(16,33,61,.16);
+  --tab-active-bg:rgba(37,99,235,.14);
+}
+.themeLight body,.themeLight{
+  background:
+    radial-gradient(1100px 650px at -5% -10%,rgba(37,99,235,.12),transparent 60%),
+    radial-gradient(900px 600px at 115% 110%,rgba(14,165,233,.10),transparent 60%),
+    var(--bg);
+}
 .compact .kpi{padding:12px}.compact .pred{padding:12px}.compact .chartWrap{padding:10px}
 .feedTop{margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .feedCard{padding:12px}
@@ -300,6 +326,7 @@ body{
           <div class="chartHead">
             <div class="chartTitle"><span class="mi">query_stats</span> BTC/USDT Market View (Last 60)</div>
             <div class="tabset">
+              <button class="tab" onclick="setMode('candle', this)">Candles</button>
               <button class="tab on" onclick="setMode('price', this)">Price</button>
               <button class="tab" onclick="setMode('rsi', this)">RSI</button>
               <button class="tab" onclick="setMode('macd', this)">MACD</button>
@@ -428,6 +455,7 @@ let MC = null;
 let RC = null;
 let cMode = 'price';
 let cData = [];
+let candleData = [];
 let runsData = [];
 let selectedRun = null;
 let vizMode = 'bar';
@@ -455,6 +483,7 @@ function setCoin(symbol, btn){
   document.querySelectorAll('.coinBtn').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
   connectCoinWs();
+  loadCandles();
 }
 
 function connectCoinWs(){
@@ -464,13 +493,23 @@ function connectCoinWs(){
     try{
       const d = JSON.parse(ev.data);
       wsCount += 1;
-      set('np', '$' + fmt2(d.c));
-      const nc = document.getElementById('nc');
+      const px = Number(d.c || 0);
+      const hi = Number(d.h || 0);
+      const lo = Number(d.l || 0);
       const chg = Number(d.P || 0);
+
+      set('np', '$' + fmt2(px));
+      const nc = document.getElementById('nc');
       nc.textContent = (chg >= 0 ? '+' : '') + chg + '%';
       nc.className = 'change ' + (chg >= 0 ? 'up' : 'down');
       set('nt', new Date().toLocaleTimeString());
       set('pf-ref', new Date().toLocaleTimeString());
+
+      // Production-safe fallback: keep KPI strip updated even if Socket.IO ticker lags.
+      set('lv-p', '$' + fmt2(px));
+      set('lv-h', '$' + fmt2(hi));
+      set('lv-l', '$' + fmt2(lo));
+      set('lv-chg', (chg >= 0 ? '+' : '') + chg + '%');
     }catch(e){}
   };
 }
@@ -478,6 +517,7 @@ function connectCoinWs(){
 function toggleTheme(btn){
   document.body.classList.toggle('themeLight');
   btn.classList.toggle('on');
+  applyThemePalette();
 }
 
 function toggleCompact(btn){
@@ -489,6 +529,40 @@ function toggleHelp(btn){
   helpMode = !helpMode;
   btn.classList.toggle('on', helpMode);
   document.querySelectorAll('[data-help]').forEach(el => el.classList.toggle('on', helpMode));
+}
+
+function applyThemePalette(){
+  if (!MC || !RC) return;
+  const css = getComputedStyle(document.body);
+  const tick = css.getPropertyValue('--chart-tick').trim();
+  const grid = css.getPropertyValue('--chart-grid').trim();
+  const border = css.getPropertyValue('--chart-border').trim();
+
+  MC.options.plugins.legend.labels.color = tick;
+  MC.options.scales.x.ticks.color = tick;
+  MC.options.scales.x.grid.color = grid;
+  MC.options.scales.x.border.color = border;
+  MC.options.scales.y.ticks.color = tick;
+  MC.options.scales.y.grid.color = grid;
+  MC.options.scales.y.border.color = border;
+  MC.update('none');
+
+  RC.options.plugins.legend.labels.color = tick;
+  if (RC.options.scales.x) {
+    RC.options.scales.x.ticks.color = tick;
+    RC.options.scales.x.grid.color = grid;
+  }
+  if (RC.options.scales.y) {
+    RC.options.scales.y.ticks.color = tick;
+    RC.options.scales.y.grid.color = grid;
+  }
+  if (RC.options.scales.r) {
+    RC.options.scales.r.ticks.color = tick;
+    RC.options.scales.r.grid.color = grid;
+    RC.options.scales.r.angleLines.color = border;
+    RC.options.scales.r.pointLabels.color = tick;
+  }
+  RC.update('none');
 }
 
 function setRange(n, btn){
@@ -506,6 +580,7 @@ function toggleOverlay(kind, btn){
 }
 
 function initChart() {
+  const css = getComputedStyle(document.body);
   MC = new Chart(document.getElementById('mchart').getContext('2d'), {
     type: 'line',
     data: { labels: [], datasets: [] },
@@ -514,7 +589,7 @@ function initChart() {
       maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { labels: { color: '#8ca1c2', font: { family: 'Manrope', size: 11 } } },
+        legend: { labels: { color: css.getPropertyValue('--chart-tick').trim(), font: { family: 'Manrope', size: 11 } } },
         tooltip: {
           backgroundColor: 'rgba(7,12,22,.98)',
           borderColor: 'rgba(88,139,255,.55)',
@@ -525,6 +600,10 @@ function initChart() {
           displayColors: true,
           callbacks: {
             label: c => {
+              if (c.dataset && c.dataset.type === 'candlestick' && c.raw) {
+                const r = c.raw;
+                return `O:${fmt2(r.o)} H:${fmt2(r.h)} L:${fmt2(r.l)} C:${fmt2(r.c)}`;
+              }
               if (c.parsed.y == null) return null;
               const dollar = ['Price','MA Short','MA Long','Actual','Predicted'].some(x => c.dataset.label.includes(x));
               return c.dataset.label + ': ' + (dollar ? '$' + fmt2(c.parsed.y) : Number(c.parsed.y).toFixed(4));
@@ -533,14 +612,14 @@ function initChart() {
         }
       },
       scales: {
-        x: { ticks: { color: '#8fa6c8', maxTicksLimit: 10 }, grid: { color: 'rgba(140,161,194,.10)' }, border: { color: 'rgba(140,161,194,.14)' } },
+        x: { ticks: { color: css.getPropertyValue('--chart-tick').trim(), maxTicksLimit: 10 }, grid: { color: css.getPropertyValue('--chart-grid').trim() }, border: { color: css.getPropertyValue('--chart-border').trim() } },
         y: {
           ticks: {
-            color: '#8fa6c8',
+            color: css.getPropertyValue('--chart-tick').trim(),
             callback: v => (cMode === 'price' || cMode === 'pred') ? '$' + Number(v).toLocaleString() : Number(v).toFixed(2)
           },
-          grid: { color: 'rgba(140,161,194,.10)' },
-          border: { color: 'rgba(140,161,194,.14)' }
+          grid: { color: css.getPropertyValue('--chart-grid').trim() },
+          border: { color: css.getPropertyValue('--chart-border').trim() }
         }
       }
     }
@@ -548,16 +627,17 @@ function initChart() {
 }
 
 function initRunChart(){
+  const css = getComputedStyle(document.body);
   RC = new Chart(document.getElementById('rchart').getContext('2d'), {
     type: 'bar',
     data: { labels: [], datasets: [] },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: '#9ab0ce' } } },
+      plugins: { legend: { labels: { color: css.getPropertyValue('--chart-tick').trim() } } },
       scales: {
-        x: { ticks: { color: '#8fa6c8' }, grid: { color: 'rgba(140,161,194,.08)' } },
-        y: { ticks: { color: '#8fa6c8' }, grid: { color: 'rgba(140,161,194,.08)' }, beginAtZero: true }
+        x: { ticks: { color: css.getPropertyValue('--chart-tick').trim() }, grid: { color: css.getPropertyValue('--chart-grid').trim() } },
+        y: { ticks: { color: css.getPropertyValue('--chart-tick').trim() }, grid: { color: css.getPropertyValue('--chart-grid').trim() }, beginAtZero: true }
       }
     }
   });
@@ -571,7 +651,9 @@ function setMode(mode, btn) {
 }
 
 function drawChart() {
-  if (!MC || !cData.length) return;
+  if (!MC) return;
+  if (cMode !== 'candle' && !cData.length) return;
+  if (cMode === 'candle' && !candleData.length) return;
   const data = cData.slice(-rangeCount);
   const labels = data.map(d => d.t);
   let ds = [];
@@ -594,31 +676,103 @@ function drawChart() {
     return g;
   };
 
-  if (cMode === 'price') {
+  if (cMode === 'candle') {
+    MC.config.type = 'candlestick';
+    const cset = candleData.slice(-rangeCount).map(k => ({
+      x: Number(k.x),
+      o: Number(k.o),
+      h: Number(k.h),
+      l: Number(k.l),
+      c: Number(k.c)
+    })).filter(k => Number.isFinite(k.o) && Number.isFinite(k.h) && Number.isFinite(k.l) && Number.isFinite(k.c));
+    ds = [{
+      type: 'candlestick',
+      label: 'OHLC',
+      data: cset,
+      parsing: false,
+      color: {
+        up: '#16c784',
+        down: '#ff5d7a',
+        unchanged: '#8fa6c8',
+      },
+      borderColor: {
+        up: '#16c784',
+        down: '#ff5d7a',
+        unchanged: '#8fa6c8',
+      }
+    }];
+    MC.options.scales.x.type = 'timeseries';
+    MC.options.scales.x.time = { unit: 'minute', tooltipFormat: 'HH:mm' };
+    MC.options.scales.y.ticks.callback = v => '$' + Number(v).toLocaleString();
+    if (cset.length) {
+      const lows = cset.map(d => d.l);
+      const highs = cset.map(d => d.h);
+      const ymin = Math.min(...lows);
+      const ymax = Math.max(...highs);
+      MC.options.scales.y.min = ymin * 0.9995;
+      MC.options.scales.y.max = ymax * 1.0005;
+    } else {
+      delete MC.options.scales.y.min;
+      delete MC.options.scales.y.max;
+    }
+  } else if (cMode === 'price') {
+    MC.config.type = 'line';
+    delete MC.options.scales.y.min;
+    delete MC.options.scales.y.max;
     ds = [
       { label: 'Price', data: data.map(d => d.p), borderColor: '#4c83ff', backgroundColor: priceFill, fill: true, borderWidth: 2.6, pointRadius: 0, pointHoverRadius: 4, pointHoverBackgroundColor: '#9bb8ff', pointHoverBorderColor: '#0a1428', pointHoverBorderWidth: 2, tension: .4 },
       ...(showShortMA ? [{ label: 'MA Short', data: data.map(d => d.ms), borderColor: '#10d19a', borderDash: [5,4], borderWidth: 2, fill: false, pointRadius: 0, tension: .38 }] : []),
       ...(showLongMA ? [{ label: 'MA Long', data: data.map(d => d.ml), borderColor: '#f6b046', borderDash: [7,5], borderWidth: 2, fill: false, pointRadius: 0, tension: .38 }] : [])
     ];
   } else if (cMode === 'rsi') {
+    MC.config.type = 'line';
+    delete MC.options.scales.y.min;
+    delete MC.options.scales.y.max;
     ds = [
       { label: 'RSI (14)', data: data.map(d => d.rsi), borderColor: '#22c1ff', backgroundColor: cyanFill, fill: true, borderWidth: 2.4, pointRadius: 0, tension: .38 }
     ];
   } else if (cMode === 'macd') {
+    MC.config.type = 'line';
+    delete MC.options.scales.y.min;
+    delete MC.options.scales.y.max;
     ds = [
       { label: 'MACD', data: data.map(d => d.mc), borderColor: '#978dff', borderWidth: 2.4, fill: false, pointRadius: 0, tension: .38 },
       { label: 'Signal', data: data.map(d => d.mcs), borderColor: '#f8b34a', borderDash: [5,4], borderWidth: 1.8, fill: false, pointRadius: 0, tension: .38 }
     ];
   } else {
+    MC.config.type = 'line';
+    delete MC.options.scales.y.min;
+    delete MC.options.scales.y.max;
     ds = [
       { label: 'Actual', data: data.map(d => d.p), borderColor: '#4c83ff', borderWidth: 2.4, fill: false, pointRadius: 0, tension: .38 },
       { label: 'Predicted', data: data.map(d => d.rp), borderColor: '#22c1ff', borderDash: [5,4], borderWidth: 2, fill: false, pointRadius: 0, tension: .38 }
     ];
   }
 
-  MC.data.labels = labels;
+  MC.data.labels = cMode === 'candle' ? [] : labels;
   MC.data.datasets = ds;
+  if (cMode !== 'candle') {
+    MC.options.scales.x.type = 'category';
+  }
   MC.update('active');
+}
+
+async function loadCandles() {
+  try {
+    const d = await fetch(`/api/candles?limit=${Math.max(rangeCount, 120)}&symbol=${encodeURIComponent(selectedCoin.toUpperCase())}`).then(r => r.json());
+    if (!d.ok) return;
+    candleData = (d.candles || []).map(k => ({
+      x: new Date(k.x).getTime(),
+      o: Number(k.o),
+      h: Number(k.h),
+      l: Number(k.l),
+      c: Number(k.c),
+      v: Number(k.v || 0)
+    }));
+    if (cMode === 'candle') drawChart();
+  } catch (e) {
+    console.error('[candles]', e);
+  }
 }
 
 function setViz(mode, btn){
@@ -729,20 +883,22 @@ function renderRunChart(){
   }];
 
   if (vizMode === 'radar') {
+    const css = getComputedStyle(document.body);
     RC.options.scales = {
       r: {
         min: 0,
         max: 100,
-        ticks: { color: '#8fa6c8', backdropColor: 'transparent' },
-        grid: { color: 'rgba(140,161,194,.14)' },
-        angleLines: { color: 'rgba(140,161,194,.14)' },
-        pointLabels: { color: '#9fb4d3', font: { size: 11 } }
+        ticks: { color: css.getPropertyValue('--chart-tick').trim(), backdropColor: 'transparent' },
+        grid: { color: css.getPropertyValue('--chart-grid').trim() },
+        angleLines: { color: css.getPropertyValue('--chart-border').trim() },
+        pointLabels: { color: css.getPropertyValue('--chart-tick').trim(), font: { size: 11 } }
       }
     };
   } else {
+    const css = getComputedStyle(document.body);
     RC.options.scales = {
-      x: { ticks: { color: '#8fa6c8' }, grid: { color: 'rgba(140,161,194,.08)' } },
-      y: { ticks: { color: '#8fa6c8' }, grid: { color: 'rgba(140,161,194,.08)' }, beginAtZero: true, min: 0, max: 100 }
+      x: { ticks: { color: css.getPropertyValue('--chart-tick').trim() }, grid: { color: css.getPropertyValue('--chart-grid').trim() } },
+      y: { ticks: { color: css.getPropertyValue('--chart-tick').trim() }, grid: { color: css.getPropertyValue('--chart-grid').trim() }, beginAtZero: true, min: 0, max: 100 }
     };
   }
   RC.update('active');
@@ -858,6 +1014,7 @@ async function loadLive() {
 
     cData = d.chart || [];
     drawChart();
+    if (!candleData.length) loadCandles();
   } catch (e) {
     console.error(e);
   }
@@ -917,12 +1074,15 @@ io2.on('ticker', d => {
 
 initChart();
 initRunChart();
+applyThemePalette();
 connectCoinWs();
 loadLive();
+loadCandles();
 loadPipe();
 loadRuns();
 loadFeed();
 setInterval(() => { loadLive(); loadPipe(); loadRuns(); }, 12000);
+setInterval(() => { loadCandles(); }, 15000);
 setInterval(() => { loadFeed(); }, 60000);
 setInterval(() => { set('pf-ws', wsCount); wsCount = 0; }, 60000);
 </script>
