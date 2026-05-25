@@ -15,3 +15,12 @@ xgboost>=2.0.0
 
 # MLflow — DagsHub experiment tracking
 mlflow>=2.10.0
+
+# Dashboard Web App & WebSockets
+Flask>=3.0.0
+Flask-CORS>=4.0.0
+flask-socketio>=5.3.6
+eventlet>=0.33.3
+python-dotenv>=1.0.0
+gunicorn>=21.2.0
+websocket-client>=1.6.0
