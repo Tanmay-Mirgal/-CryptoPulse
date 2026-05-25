@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>CryptoPulse ÔÇö MLOps Trading Intelligence</title>
+<title>CryptoPulse &mdash; MLOps Trading Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -281,7 +281,7 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
 <!-- ÔòÉÔòÉÔòÉÔòÉ NAV ÔòÉÔòÉÔòÉÔòÉ -->
 <nav>
   <div class="n-logo">
-    <div class="n-icon">ÔÜí</div>
+    <div class="n-icon">&#9889;</div>
     <div class="n-title">Crypto<em>Pulse</em></div>
   </div>
   <div class="n-tabs">
@@ -302,16 +302,16 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
 <main>
 
 <!-- ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
-     PAGE 1 ÔÇö DASHBOARD
+     PAGE 1 &mdash; DASHBOARD
 ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ -->
 <div id="p-dash" class="page on">
 
   <!-- 24h stat strip (WebSocket live) -->
   <div class="stat-strip">
     <div class="stat">
-      <div class="stat-l">BTC Price ┬À Live</div>
+      <div class="stat-l">BTC Price &middot; Live</div>
       <div class="stat-v cy" id="lv-p">$---</div>
-      <div class="stat-s">Binance ┬À Real-time WebSocket</div>
+      <div class="stat-s">Binance &middot; Real-time WebSocket</div>
     </div>
     <div class="stat">
       <div class="stat-l">24h Change</div>
@@ -331,7 +331,7 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
   </div>
 
   <!-- Prediction Trio -->
-  <div class="sec"><div class="sec-lbl">­ƒñû ML Predictions from DB</div><div class="sec-line"></div></div>
+  <div class="sec"><div class="sec-lbl">&#129302; ML Predictions from DB</div><div class="sec-line"></div></div>
   <div class="trio">
 
     <!-- Signal -->
@@ -345,7 +345,7 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
     <!-- Classification -->
     <div class="pred-box">
       <div class="pb-head">
-        <div class="pb-ico clf">­ƒÄ»</div>
+        <div class="pb-ico clf">&#128302;</div>
         <div class="pb-meta">
           <div class="pb-type">Classification Model</div>
           <div class="pb-desc">Next candle direction predict</div>
@@ -353,7 +353,7 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
         <span class="pill pill-p">DIRECTION</span>
       </div>
       <div class="pb-main nt" id="clf-m">---</div>
-      <div class="pb-sub" id="clf-s">Score 0/4 ┬À loading...</div>
+      <div class="pb-sub" id="clf-s">Score 0/4 &middot; loading...</div>
       <div class="kgrid">
         <div class="kv"><div class="kv-l">Score</div><div class="kv-v p" id="k-sc">--/4</div></div>
         <div class="kv"><div class="kv-l">RSI Zone</div><div class="kv-v" id="k-rz">---</div></div>
@@ -394,11 +394,11 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
   </div>
 
   <!-- Chart + Pipeline -->
-  <div class="sec"><div class="sec-lbl">­ƒôè Price Chart ┬À Pipeline Status</div><div class="sec-line"></div></div>
+  <div class="sec"><div class="sec-lbl">&#128202; Price Chart &middot; Pipeline Status</div><div class="sec-line"></div></div>
   <div class="dash-grid">
     <div class="card">
       <div class="card-h">
-        <div class="card-title">BTC/USDT ┬À Last 60 min</div>
+        <div class="card-title">BTC/USDT &middot; Last 60 min</div>
         <div class="tab-row">
           <div class="ctab on"  onclick="tab('price',this)">Price</div>
           <div class="ctab"     onclick="tab('rsi',this)">RSI</div>
@@ -409,24 +409,24 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
       <div class="card-b"><div class="chartbox"><canvas id="mchart"></canvas></div></div>
     </div>
     <div class="card">
-      <div class="card-h"><div class="card-title">ÔÜÖ´©Å Pipeline</div><span class="pill pill-g">Auto-Chain</span></div>
+      <div class="card-h"><div class="card-title">&#9881;&#65039; Pipeline</div><span class="pill pill-g">Auto-Chain</span></div>
       <div class="card-b">
         <div class="pipe">
           <div class="pipe-item">
-            <div class="pipe-ico">­ƒôÑ</div>
-            <div class="pipe-info"><div class="pipe-name">Ingestion</div><div class="pipe-detail" id="pp-i">Binance ÔåÆ DB ┬À 1 min</div></div>
+            <div class="pipe-ico">&#128229;</div>
+            <div class="pipe-info"><div class="pipe-name">Ingestion</div><div class="pipe-detail" id="pp-i">Binance &rarr; DB &middot; 1 min</div></div>
             <span class="pipe-badge idle" id="pb-i">idle</span>
           </div>
-          <div class="pipe-arrow">Ôåô auto-trigger</div>
+          <div class="pipe-arrow">&darr; auto-trigger</div>
           <div class="pipe-item">
-            <div class="pipe-ico">ÔÜÖ´©Å</div>
-            <div class="pipe-info"><div class="pipe-name">Feature Engineering</div><div class="pipe-detail" id="pp-f">RSI ┬À MACD ┬À MA ┬À Targets</div></div>
+            <div class="pipe-ico">&#9881;&#65039;</div>
+            <div class="pipe-info"><div class="pipe-name">Feature Engineering</div><div class="pipe-detail" id="pp-f">RSI &middot; MACD &middot; MA &middot; Targets</div></div>
             <span class="pipe-badge idle" id="pb-f">idle</span>
           </div>
-          <div class="pipe-arrow">Ôåô every 6 hrs</div>
+          <div class="pipe-arrow">&darr; every 6 hrs</div>
           <div class="pipe-item">
-            <div class="pipe-ico">­ƒºá</div>
-            <div class="pipe-info"><div class="pipe-name">Model Training</div><div class="pipe-detail" id="pp-m">XGBoost CLF + REG ┬À MLflow</div></div>
+            <div class="pipe-ico">&#129504;</div>
+            <div class="pipe-info"><div class="pipe-name">Model Training</div><div class="pipe-detail" id="pp-m">XGBoost CLF + REG &middot; MLflow</div></div>
             <span class="pipe-badge idle" id="pb-m">idle</span>
           </div>
         </div>
@@ -436,7 +436,7 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
 </div>
 
 <!-- ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
-     PAGE 2 ÔÇö PREDICTIONS
+     PAGE 2 &mdash; PREDICTIONS
 ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ -->
 <div id="p-pred" class="page">
   <div class="p2-grid">
@@ -446,7 +446,7 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
       <div class="card-b">
         <div class="explain-row">
           <div class="ex-block clf">
-            <div class="ex-t p">­ƒÄ» Classification Model ÔÇö Direction</div>
+            <div class="ex-t p">&#128302; Classification Model &mdash; Direction</div>
             <div class="ex-body">
               Predicts <b>UP or DOWN</b> for next 1-minute candle.<br>
               <code>BUY = 1</code> Next candle <b style="color:var(--green)">UPAR</b> close hoga<br>
@@ -455,10 +455,10 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
             </div>
           </div>
           <div class="ex-block reg">
-            <div class="ex-t c">­ƒôê Regression Model ÔÇö Exact Price</div>
+            <div class="ex-t c">­ƒôê Regression Model &mdash; Exact Price</div>
             <div class="ex-body">
               Predicts <b>exact dollar value</b> of next candle close.<br>
-              Example: $76,716 ÔåÆ predicted $76,486<br>
+              Example: $76,716 &rarr; predicted $76,486<br>
               Error metric: MAE ~$100-500 for BTC typically
             </div>
           </div>
@@ -475,7 +475,7 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
 
     <!-- Live signal summary -->
     <div class="card">
-      <div class="card-h"><div class="card-title">­ƒôè Signal Distribution</div><span class="pill pill-p" id="hist-cnt">-- records</span></div>
+      <div class="card-h"><div class="card-title">&#128202; Signal Distribution</div><span class="pill pill-p" id="hist-cnt">-- records</span></div>
       <div class="card-b">
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px">
           <div class="kv" style="text-align:center">
@@ -498,7 +498,7 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
 
   <!-- History table -->
   <div class="card">
-    <div class="card-h"><div class="card-title">­ƒòÉ Signal History ┬À Last 100</div></div>
+    <div class="card-h"><div class="card-title">&#128220; Signal History &middot; Last 100</div></div>
     <div style="overflow:hidden">
       <div class="hist-header"><span>TIME</span><span>PRICE</span><span>SIGNAL</span><span>RSI</span><span>PRED PRICE</span></div>
       <div style="max-height:400px;overflow-y:auto" id="hist-body"></div>
@@ -507,28 +507,28 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
 </div>
 
 <!-- ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
-     PAGE 3 ÔÇö MODELS
+     PAGE 3 &mdash; MODELS
 ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ -->
 <div id="p-mdl" class="page">
   <div class="m-grid">
     <div class="card">
-      <div class="card-h"><div class="card-title">­ƒÄ» Classifier Runs</div><span class="pill pill-p">DIRECTION MODEL</span></div>
-      <div class="card-b"><div class="runs" id="clf-runs"><div class="empty"><div class="empty-ico">ÔÅ│</div>Loading...</div></div></div>
+      <div class="card-h"><div class="card-title">&#128302; Classifier Runs</div><span class="pill pill-p">DIRECTION MODEL</span></div>
+      <div class="card-b"><div class="runs" id="clf-runs"><div class="empty"><div class="empty-ico">&#9203;</div>Loading...</div></div></div>
     </div>
     <div class="card">
       <div class="card-h"><div class="card-title">­ƒôê Regressor Runs</div><span class="pill pill-c">PRICE MODEL</span></div>
-      <div class="card-b"><div class="runs" id="reg-runs"><div class="empty"><div class="empty-ico">ÔÅ│</div>Loading...</div></div></div>
+      <div class="card-b"><div class="runs" id="reg-runs"><div class="empty"><div class="empty-ico">&#9203;</div>Loading...</div></div></div>
     </div>
   </div>
 
   <div class="card">
     <div class="card-h">
-      <div class="card-title">­ƒôè All Runs Comparison</div>
-      <span class="pill pill-g">Ôÿà Best = Active</span>
+      <div class="card-title">&#128202; All Runs Comparison</div>
+      <span class="pill pill-g">&#9733; Best = Active</span>
     </div>
     <div style="overflow-x:auto">
       <table class="cmp">
-        <thead><tr><th>Run ID</th><th>Type</th><th>Acc / MAE</th><th>F1 / MAPE</th><th>AUC / R┬▓</th><th>Date</th></tr></thead>
+        <thead><tr><th>Run ID</th><th>Type</th><th>Acc / MAE</th><th>F1 / MAPE</th><th>AUC / R&sup2;</th><th>Date</th></tr></thead>
         <tbody id="cmp-body"><tr><td colspan="6" class="empty">Loading runs from MLflow...</td></tr></tbody>
       </table>
     </div>
@@ -538,7 +538,7 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
     <a href="https://dagshub.com/Tanmay-Mirgal/CryptoPulse.mlflow" target="_blank"
        style="display:inline-flex;align-items:center;gap:9px;padding:11px 26px;border-radius:11px;background:var(--indigo3);border:1px solid rgba(99,102,241,.25);color:var(--indigo2);font-weight:700;font-size:13px;text-decoration:none;transition:.2s"
        onmouseover="this.style.background='rgba(99,102,241,.18)'" onmouseout="this.style.background='var(--indigo3)'">
-      ­ƒöù Open MLflow on DagsHub ÔåÆ
+      ­ƒöù Open MLflow on DagsHub &rarr;
     </a>
   </div>
 
@@ -552,7 +552,7 @@ code{font-family:var(--mono);font-size:10px;padding:1px 5px;border-radius:4px;ba
 
   <div class="card" style="margin-bottom: 20px;">
     <div class="card-h">
-      <div class="card-title">­ƒôï engineered_features ┬À Latest 100 Rows</div>
+      <div class="card-title">&#128203; engineered_features &middot; Latest 100 Rows</div>
       <span class="pill pill-g" id="d-cnt">-- rows</span>
     </div>
     <div class="dtable-wrap">
@@ -575,7 +575,7 @@ let cMode = 'price';
 let cData = [];
 
 // ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
-// SOCKET.IO ÔÇö Binance Live
+// SOCKET.IO &mdash; Binance Live
 // ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
 const io2 = io();
 
@@ -706,16 +706,16 @@ async function loadLive() {
     sb.textContent = clf.signal; sb.className = 'sig-badge ' + clf.signal;
     set('sig-cf', clf.conf + '%');
     set('sig-note',
-      clf.signal === 'BUY'  ? '­ƒôê Bullish indicators ÔÇö next candle UPAR close hone ki expect' :
-      clf.signal === 'SELL' ? '­ƒôë Bearish indicators ÔÇö next candle NEECHE close hone ki expect' :
-                              'ÔÅ© Mixed signals ÔÇö clear direction nahi hai');
+      clf.signal === 'BUY'  ? '­ƒôê Bullish indicators &mdash; next candle UPAR close hone ki expect' :
+      clf.signal === 'SELL' ? '­ƒôë Bearish indicators &mdash; next candle NEECHE close hone ki expect' :
+                              '&#9888;&#65039; Mixed signals &mdash; clear direction nahi hai');
 
     // Classification
     const cm = document.getElementById('clf-m');
-    cm.textContent = clf.signal === 'BUY'  ? 'Ôåæ UPAR JAYEGA'   :
-                     clf.signal === 'SELL' ? 'Ôåô NEECHE JAYEGA' : 'ÔåÆ FLAT RAHEGA';
+    cm.textContent = clf.signal === 'BUY'  ? '&uarr; UPAR JAYEGA'   :
+                     clf.signal === 'SELL' ? '&darr; NEECHE JAYEGA' : '&rarr; FLAT RAHEGA';
     cm.className   = 'pb-main ' + (clf.signal === 'BUY' ? 'up' : clf.signal === 'SELL' ? 'dn' : 'nt');
-    set('clf-s', `Score ${clf.score}/4 ┬À ${clf.conf}% confidence ┬À RSI+MACD+MA`);
+    set('clf-s', `Score ${clf.score}/4 &middot; ${clf.conf}% confidence &middot; RSI+MACD+MA`);
     set('k-sc', clf.score + '/4');
 
     const rz = document.getElementById('k-rz');
@@ -723,11 +723,11 @@ async function loadLive() {
     rz.className   = 'kv-v ' + (clf.rsi_zone === 'OVERSOLD' ? 'g' : clf.rsi_zone === 'OVERBOUGHT' ? 'r' : '');
 
     const mt = document.getElementById('k-mt');
-    mt.textContent = clf.macd_bull ? 'BULLISH Ôåæ' : 'BEARISH Ôåô';
+    mt.textContent = clf.macd_bull ? 'BULLISH &uarr;' : 'BEARISH &darr;';
     mt.className   = 'kv-v ' + (clf.macd_bull ? 'g' : 'r');
 
     const at = document.getElementById('k-at');
-    at.textContent = clf.ma_up ? 'UPTREND Ôåæ' : 'DOWNTREND Ôåô';
+    at.textContent = clf.ma_up ? 'UPTREND &uarr;' : 'DOWNTREND &darr;';
     at.className   = 'kv-v ' + (clf.ma_up ? 'g' : 'r');
 
     // Regression
@@ -747,12 +747,12 @@ async function loadLive() {
     const ri = document.getElementById('i-rsi');
     ri.textContent = ind.rsi;
     ri.style.color = ind.rsi < 40 ? 'var(--green)' : ind.rsi > 60 ? 'var(--red)' : 'var(--t1)';
-    set('i-rsi-s', ind.rsi < 40 ? 'ÔÜí Oversold' : ind.rsi > 60 ? 'ÔÜá Overbought' : 'Neutral (40ÔÇô60)');
+    set('i-rsi-s', ind.rsi < 40 ? '&#9889; Oversold' : ind.rsi > 60 ? '&uarr; Overbought' : 'Neutral (40ÔÇô60)');
 
     const mi = document.getElementById('i-macd');
     mi.textContent = ind.macd;
     mi.style.color = ind.macd > ind.macd_s ? 'var(--green)' : 'var(--red)';
-    set('i-macd-s', ind.macd > ind.macd_s ? 'Ôåæ Above signal' : 'Ôåô Below signal');
+    set('i-macd-s', ind.macd > ind.macd_s ? '&uarr; Above signal' : '&darr; Below signal');
 
     set('i-mas', '$' + parseInt(ind.ma_s).toLocaleString());
     set('i-mal', '$' + parseInt(ind.ma_l).toLocaleString());
@@ -786,14 +786,14 @@ async function loadPipe() {
     const d = await fetch('/api/pipeline').then(r => r.json());
     if (!d.ok) return;
     const update = (pi, pb, row, def) => {
-      set(pi, def + ' ┬À ' + row.count + ' rows ┬À ' + row.ts);
+      set(pi, def + ' &middot; ' + row.count + ' rows &middot; ' + row.ts);
       const el = document.getElementById(pb);
       el.textContent = row.status === 'live' ? 'LIVE Ô£ô' : row.status === 'warn' ? 'DELAYED' : 'IDLE';
       el.className   = 'pipe-badge ' + row.status;
     };
-    update('pp-i', 'pb-i', d.ingestion, 'Binance ÔåÆ DB ┬À 1 min');
-    update('pp-f', 'pb-f', d.features,  'RSI ┬À MACD ┬À MA');
-    update('pp-m', 'pb-m', d.model,     'XGBoost ┬À 6hrs');
+    update('pp-i', 'pb-i', d.ingestion, 'Binance &rarr; DB &middot; 1 min');
+    update('pp-f', 'pb-f', d.features,  'RSI &middot; MACD &middot; MA');
+    update('pp-m', 'pb-m', d.model,     'XGBoost &middot; 6hrs');
   } catch(e) {}
 }
 
@@ -852,20 +852,20 @@ async function loadRuns() {
 
     const renderRuns = (id, runs, isClf) => {
       const el = document.getElementById(id);
-      if (!runs.length) { el.innerHTML = '<div class="empty"><div class="empty-ico">ÔÅ│</div>No runs yet</div>'; return; }
+      if (!runs.length) { el.innerHTML = '<div class="empty"><div class="empty-ico">&#9203;</div>No runs yet</div>'; return; }
       el.innerHTML = runs.map((r, i) => `
         <div class="run ${i===0?'best':''}">
           <div class="run-top">
             <span class="run-name">${r.name}</span>
             <div class="run-tags">
-              ${i===0 ? '<span class="best-star">Ôÿà BEST</span>' : ''}
+              ${i===0 ? '<span class="best-star">&#9733; BEST</span>' : ''}
               <span class="pill ${isClf?'pill-p':'pill-c'}">${isClf?'CLF':'REG'}</span>
             </div>
           </div>
           <div class="run-metrics">
             ${isClf
               ? `<span class="rm">Acc <b>${r.acc}%</b></span><span class="rm">F1 <b>${r.f1}%</b></span><span class="rm">AUC <b>${r.auc}</b></span>`
-              : `<span class="rm">MAE <b>$${r.mae}</b></span><span class="rm">MAPE <b>${r.mape}%</b></span><span class="rm">R┬▓ <b>${r.r2}</b></span>`}
+              : `<span class="rm">MAE <b>$${r.mae}</b></span><span class="rm">MAPE <b>${r.mape}%</b></span><span class="rm">R&sup2; <b>${r.r2}</b></span>`}
             <span class="run-date">${r.date}</span>
           </div>
         </div>`).join('');
@@ -878,7 +878,7 @@ async function loadRuns() {
           const isClf = r.type !== 'regressor';
           const bw = isClf ? (r.acc).toFixed(0) : Math.max(0, Math.min(100, r.r2 * 100)).toFixed(0);
           return `<tr class="${i===0?'best':''}">
-            <td style="font-family:var(--mono);font-size:11px;color:var(--t3)">${i===0?'Ôÿà ':''}${r.id}</td>
+            <td style="font-family:var(--mono);font-size:11px;color:var(--t3)">${i===0?'&#9733; ':''}${r.id}</td>
             <td><span class="pill ${isClf?'pill-p':'pill-c'}">${isClf?'DIRECTION':'PRICE'}</span></td>
             <td><div class="bar-w"><span style="font-family:var(--mono);font-size:12px;font-weight:700;min-width:50px;color:${i===0?'var(--green)':'var(--t1)'}">${isClf ? r.acc+'%' : '$'+r.mae}</span><div class="bar-bg"><div class="bar-f" style="width:${bw}%"></div></div></div></td>
             <td style="font-family:var(--mono);font-size:11px">${isClf ? r.f1+'%' : r.mape+'%'}</td>
@@ -886,12 +886,12 @@ async function loadRuns() {
             <td style="font-size:11px;color:var(--t3)">${r.date}</td>
           </tr>`;
         }).join('')
-      : '<tr><td colspan="6" class="empty">No MLflow runs yet ÔÇö training DAG trigger karo</td></tr>';
+      : '<tr><td colspan="6" class="empty">No MLflow runs yet &mdash; training DAG trigger karo</td></tr>';
   } catch(e) {}
 }
 
 // ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
-// API: /api/history ÔåÆ Data page
+// API: /api/history &rarr; Data page
 // ÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉ
 async function loadData() {
   try {
