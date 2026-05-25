@@ -164,6 +164,28 @@ body{
 .helpOutline.on{box-shadow:0 0 0 1px rgba(34,193,255,.45), 0 0 0 4px rgba(34,193,255,.08)}
 .helpBadge{display:none;position:absolute;top:10px;right:10px;font-size:10px;padding:4px 8px;border-radius:999px;border:1px solid rgba(34,193,255,.45);color:#9de7ff;background:rgba(34,193,255,.12)}
 .helpOutline.on .helpBadge{display:inline-flex}
+.chartWrap.helpOutline .helpBadge{left:10px;right:auto}
+.chartWrap.helpOutline.on .chartHead{padding-top:18px}
+.walkOverlay{
+  position:fixed;inset:0;background:rgba(5,10,20,.66);z-index:1200;display:none;
+}
+.walkOverlay.on{display:block}
+.walkCard{
+  position:fixed;z-index:1201;width:min(360px,calc(100vw - 24px));
+  background:linear-gradient(180deg,var(--panel),var(--panel-2));
+  border:1px solid rgba(34,193,255,.4);border-radius:12px;padding:12px;
+  box-shadow:0 16px 40px rgba(0,0,0,.45);
+}
+.walkStep{font-size:10px;letter-spacing:.9px;text-transform:uppercase;color:#8fd8ff}
+.walkTitle{margin-top:4px;font-size:15px;font-weight:800}
+.walkBody{margin-top:6px;font-size:13px;color:#d5e7ff;line-height:1.5}
+.walkNav{margin-top:10px;display:flex;justify-content:space-between;gap:8px}
+.walkBtn{
+  flex:1;font-size:12px;padding:7px 10px;border-radius:8px;border:1px solid var(--border);
+  background:rgba(255,255,255,.03);color:var(--text);cursor:pointer
+}
+.walkBtn.primary{border-color:rgba(34,193,255,.55);background:rgba(34,193,255,.15)}
+.walkTarget{position:relative;z-index:1202;box-shadow:0 0 0 2px rgba(34,193,255,.72),0 0 0 6px rgba(34,193,255,.18);border-radius:12px}
 .dagWrap{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:8px;align-items:center;margin-top:10px}
 .dagNode{padding:10px;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,.03);text-align:center}
 .dagArrow{color:var(--muted);font-size:18px}
@@ -335,6 +357,7 @@ body{
     <div class="ctrlBar">
       <button class="ctrlBtn" id="compact-btn" onclick="toggleCompact(this)">Compact</button>
       <button class="ctrlBtn" id="help-btn" onclick="toggleHelp(this)">Help Mode</button>
+      <button class="ctrlBtn" id="walk-btn" onclick="startWalkthrough()">Walkthrough</button>
     </div>
     <div class="helpTip" id="global-help-tip">Help Mode ON: highlighted cards now show quick guidance.</div>
     <div class="viewTabs">
@@ -541,6 +564,16 @@ body{
       </article>
     </section>
   </div>
+  <div id="walk-overlay" class="walkOverlay"></div>
+  <div id="walk-card" class="walkCard" style="display:none">
+    <div class="walkStep" id="walk-step">Step 1 of 1</div>
+    <div class="walkTitle" id="walk-title">Welcome</div>
+    <div class="walkBody" id="walk-body">Let's quickly walk through the dashboard.</div>
+    <div class="walkNav">
+      <button class="walkBtn" onclick="prevWalkStep()">Previous</button>
+      <button class="walkBtn primary" id="walk-next-btn" onclick="nextWalkStep()">Next</button>
+    </div>
+  </div>
 
 <script>
 const fmt2 = n => Number(n || 0).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -563,6 +596,18 @@ let showLongMA = true;
 let helpMode = false;
 let wsCount = 0;
 let activeModelId = localStorage.getItem('active_model_id') || '';
+let walkIdx = -1;
+const walkSteps = [
+  { view: 'dashboard', sel: '.topbar', title: 'Header & Live Ticker', body: 'Yahan se live price, coin selection, aur connection status track hota hai.' },
+  { view: 'dashboard', sel: '.viewTabs', title: 'Main Navigation', body: 'इन tabs se Dashboard, Model Center, aur Live Data Feed switch karo.' },
+  { view: 'dashboard', sel: '.signal', title: 'Signal Panel', body: 'Current BUY/SELL/HOLD signal, confidence, and execution bias yahan milta hai.' },
+  { view: 'dashboard', sel: '.chartWrap', title: 'Chart Controls', body: 'Candles/Price/RSI/MACD modes ke saath range aur MA overlays control karo.' },
+  { view: 'dashboard', sel: '.bottom .list:last-child', title: 'Pipeline Health', body: 'ETL + model pipeline ka live status aur freshness yahan monitor karo.' },
+  { view: 'models', sel: '#view-models .runPanel', title: 'MLflow Runs', body: 'Runs list me se koi run select karke comparison aur activation karo.' },
+  { view: 'models', sel: '#view-models .modelTop', title: 'Model Metrics View', body: 'Bar/Line/Radar view me selected model quality visualize hoti hai.' },
+  { view: 'feed', sel: '#view-feed .feedTop', title: 'Live Data Feed', body: 'Har minute DB-fed rows ka refresh status aur latest time yahan दिखता है.' },
+  { view: 'feed', sel: '#view-feed .feedWrap', title: 'Streaming Table', body: 'Recent engineered rows table se minute-level market behavior inspect karo.' }
+];
 
 function switchView(name, btn){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
@@ -620,6 +665,56 @@ function toggleHelp(btn){
   document.querySelectorAll('[data-help]').forEach(el => el.classList.toggle('on', helpMode));
   document.querySelectorAll('[data-help-wrap]').forEach(el => el.classList.toggle('on', helpMode));
   document.getElementById('global-help-tip')?.classList.toggle('on', helpMode);
+}
+
+function showWalkStep(i){
+  if (i < 0 || i >= walkSteps.length) return;
+  walkIdx = i;
+  const s = walkSteps[i];
+  const viewBtn = document.querySelector(`.viewBtn[onclick*="${s.view}"]`);
+  if (viewBtn) switchView(s.view, viewBtn);
+  setTimeout(() => {
+    document.querySelectorAll('.walkTarget').forEach(el => el.classList.remove('walkTarget'));
+    const t = document.querySelector(s.sel);
+    if (!t) return;
+    t.classList.add('walkTarget');
+    t.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const r = t.getBoundingClientRect();
+    const card = document.getElementById('walk-card');
+    const overlay = document.getElementById('walk-overlay');
+    overlay.classList.add('on');
+    card.style.display = 'block';
+    set('walk-step', `Step ${i + 1} of ${walkSteps.length}`);
+    set('walk-title', s.title);
+    set('walk-body', s.body);
+    const top = Math.min(window.innerHeight - card.offsetHeight - 12, Math.max(12, r.bottom + 10));
+    const left = Math.min(window.innerWidth - card.offsetWidth - 12, Math.max(12, r.left));
+    card.style.top = `${top}px`;
+    card.style.left = `${left}px`;
+    const nxt = document.getElementById('walk-next-btn');
+    nxt.textContent = i === walkSteps.length - 1 ? 'Done' : 'Next';
+  }, 120);
+}
+
+function startWalkthrough(){
+  showWalkStep(0);
+}
+
+function nextWalkStep(){
+  if (walkIdx >= walkSteps.length - 1) return endWalkthrough();
+  showWalkStep(walkIdx + 1);
+}
+
+function prevWalkStep(){
+  if (walkIdx <= 0) return;
+  showWalkStep(walkIdx - 1);
+}
+
+function endWalkthrough(){
+  walkIdx = -1;
+  document.querySelectorAll('.walkTarget').forEach(el => el.classList.remove('walkTarget'));
+  document.getElementById('walk-overlay').classList.remove('on');
+  document.getElementById('walk-card').style.display = 'none';
 }
 
 function applyThemePalette(){
@@ -782,8 +877,8 @@ function drawChart() {
         backgroundColor: 'rgba(180,197,223,.55)',
         borderColor: 'rgba(180,197,223,.8)',
         borderWidth: 1,
-        barThickness: 2,
-        maxBarThickness: 2,
+        barThickness: 3,
+        maxBarThickness: 3,
         order: 1
       },
       {
@@ -793,8 +888,8 @@ function drawChart() {
         backgroundColor: cset.map(k => Number(k.c) >= Number(k.o) ? 'rgba(22,199,132,.55)' : 'rgba(255,93,122,.55)'),
         borderColor: cset.map(k => Number(k.c) >= Number(k.o) ? '#16c784' : '#ff5d7a'),
         borderWidth: 1.4,
-        barThickness: 8,
-        maxBarThickness: 10,
+        barThickness: 14,
+        maxBarThickness: 16,
         order: 2
       }
     ];
@@ -860,7 +955,7 @@ function drawChart() {
 
 async function loadCandles() {
   try {
-    const d = await fetch(`/api/candles?limit=${Math.max(rangeCount, 120)}&symbol=${encodeURIComponent(selectedCoin.toUpperCase())}`).then(r => r.json());
+    const d = await fetch(`/api/candles?limit=${Math.max(rangeCount, 120)}&interval=5m&symbol=${encodeURIComponent(selectedCoin.toUpperCase())}`).then(r => r.json());
     if (!d.ok) return;
     candleData = (d.candles || []).map(k => ({
       x: new Date(k.x).getTime(),

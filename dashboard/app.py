@@ -252,12 +252,15 @@ def api_candles():
         limit = request.args.get("limit", default=120, type=int)
         limit = max(20, min(limit, 500))
         symbol = (request.args.get("symbol", default="BTCUSDT", type=str) or "BTCUSDT").upper()
+        interval = (request.args.get("interval", default="5m", type=str) or "5m").lower()
+        if interval not in {"1m", "3m", "5m", "15m"}:
+            interval = "5m"
 
         # Primary source: Binance 1m klines (production-grade candlestick data)
         try:
             br = requests.get(
                 "https://api.binance.com/api/v3/klines",
-                params={"symbol": symbol, "interval": "1m", "limit": limit},
+                params={"symbol": symbol, "interval": interval, "limit": limit},
                 timeout=10,
             )
             br.raise_for_status()
@@ -272,7 +275,7 @@ def api_candles():
                     "v": float(k[5]),
                     "source": "binance",
                 } for k in arr]
-                return jsonify({"ok": True, "count": len(candles), "candles": candles, "source": "binance"})
+                return jsonify({"ok": True, "count": len(candles), "candles": candles, "source": "binance", "interval": interval})
         except Exception as be:
             print(f"[Candles] Binance fetch failed, fallback DB: {be}")
 
