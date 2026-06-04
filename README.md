@@ -12,37 +12,72 @@ The pipeline consists of a continuous data feedback loop, split into 5 core DAGs
 
 ```mermaid
 graph TD
-    %% Source
-    Binance[Binance API & WebSocket] -->|1-Min Candles| IngestionDAG[DAG 1: Live Ingestion]
-    
-    %% Storage & Feature Engineering
-    IngestionDAG -->|Insert Raw Ticks| NeonDB[(Neon Serverless PostgreSQL)]
-    FeatureDAG[DAG 2: Feature Engineering] -->|Read Raw Ticks| NeonDB
-    FeatureDAG -->|Compute Technical Indicators| FeatureDAG
-    FeatureDAG -->|Insert Engineered Features| NeonDB
-    
-    %% Training
-    TrainingDAG[DAG 3: Model Training] -->|Fetch Features| NeonDB
-    TrainingDAG -->|Train XGBoost Classifier & Regressor| TrainingDAG
-    TrainingDAG -->|Log Runs, Metrics & Models| DagsHubMLflow[DagsHub MLflow Registry]
-    TrainingDAG -->|Save Version Metrics| NeonDB
-    
-    %% Inference
-    InferenceDAG[DAG 4: Live Inference] -->|Fetch Latest 60m Candles| Binance
-    InferenceDAG -->|Load Active Production Model| DagsHubMLflow
-    InferenceDAG -->|Predict Signal & Target Price| InferenceDAG
-    InferenceDAG -->|Log Signal & Confidence| NeonDB
-    
-    %% Monitoring
-    MonitoringDAG[DAG 5: Data & Model Monitoring] -->|Compare Predictions & Actuals| NeonDB
-    MonitoringDAG -->|Calculate Accuracy & PSI Data Drift| MonitoringDAG
-    MonitoringDAG -->|Log Drift Metrics| NeonDB
-    
-    %% Visualization
-    Dashboard[Flask + Socket.IO Web App] -->|Query Stats, Runs & Health| NeonDB
-    Dashboard -->|Fetch MLflow Runs| DagsHubMLflow
-    Binance -->|WebSocket Stream| Dashboard
-    Dashboard -->|Render Interactive Dashboard & Chart.js| Client[Client Browser]
+    %% Style definitions for premium look
+    classDef source fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f;
+    classDef dag fill:#eff6ff,stroke:#2563eb,stroke-width:2px,color:#1e3a8a;
+    classDef db fill:#ecfdf5,stroke:#059669,stroke-width:2px,color:#064e3b;
+    classDef registry fill:#faf5ff,stroke:#7c3aed,stroke-width:2px,color:#581c87;
+    classDef ui fill:#f5f3ff,stroke:#8b5cf6,stroke-width:2px,color:#4c1d95;
+    classDef client fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,color:#14532d;
+
+    %% Data Source
+    Binance["Binance API & WebSocket"]:::source
+
+    %% Stage 1: Data Ingestion
+    subgraph Stage1 ["1. Data Ingestion & Storage"]
+        DAG1["DAG 1: Live Ingestion<br/>(Binance → Neon DB)"]:::dag
+        DB_Raw[("Neon DB Table:<br/>raw_market_ticks")]:::db
+        Binance -->|WebSocket Stream| DAG1
+        DAG1 -->|Insert Raw Candles| DB_Raw
+    end
+
+    %% Stage 2: Feature Engineering
+    subgraph Stage2 ["2. Feature Engineering"]
+        DAG2["DAG 2: Feature Engineering<br/>(Indicator Computation)"]:::dag
+        DB_Feat[("Neon DB Table:<br/>engineered_features")]:::db
+        DB_Raw -->|Read Raw Candles| DAG2
+        DAG2 -->|Compute RSI, MACD, MAs| DB_Feat
+    end
+
+    %% Stage 3: Model Training
+    subgraph Stage3 ["3. Model Training"]
+        DAG3["DAG 3: Model Training<br/>(XGBoost Training)"]:::dag
+        MLflow["DagsHub MLflow<br/>(Model Registry)"]:::registry
+        DB_Feat -->|Fetch Training Features| DAG3
+        DAG3 -->|Log Model & Runs| MLflow
+    end
+
+    %% Stage 4: Live Inference
+    subgraph Stage4 ["4. Live Inference"]
+        DAG4["DAG 4: Live Inference<br/>(Generate Signals)"]:::dag
+        DB_Pred[("Neon DB Table:<br/>predictions_log")]:::db
+        Binance -.->|Fetch Latest 60m Candles| DAG4
+        MLflow -->|Load Active Production Model| DAG4
+        DAG4 -->|Log Predictions & Signals| DB_Pred
+    end
+
+    %% Stage 5: Monitoring & Metrics
+    subgraph Stage5 ["5. Performance & Drift Monitoring"]
+        DAG5["DAG 5: Data & Model Monitoring<br/>(Accuracy & PSI Drift)"]:::dag
+        DB_Metrics[("Neon DB Table:<br/>model_metrics")]:::db
+        
+        DAG3 -->|Log Training Metrics| DB_Metrics
+        DB_Pred -->|Compare Predictions & Actuals| DAG5
+        DAG5 -->|Log Accuracy & PSI Drift| DB_Metrics
+    end
+
+    %% Stage 6: Visualization
+    subgraph Stage6 ["6. Real-time Dashboard"]
+        Dashboard["Flask + Socket.IO Dashboard"]:::ui
+        Client["Client Browser (Chart.js)"]:::client
+        
+        DB_Raw -.->|Live Price Feed| Dashboard
+        DB_Pred -.->|Predictions & Signals| Dashboard
+        DB_Metrics -.->|Drift & Accuracy History| Dashboard
+        MLflow -.->|Fetch Active Run Metadata| Dashboard
+        Binance -.->|Direct WebSocket Stream| Dashboard
+        Dashboard -->|Render Interactive SPA| Client
+    end
 ```
 
 ---
