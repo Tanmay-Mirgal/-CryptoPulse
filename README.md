@@ -185,7 +185,7 @@ Create a `.env` file in the project root directory and supply your connection ke
 
 ```env
 # Neon Serverless PostgreSQL Connection
-NEON_DATABASE_URL="postgresql://neondb_owner:YOUR_NEON_PASSWORD@ep-flat-shadow-aq6optjf-pooler.c-8.us-east-1.aws.neon.tech/neondb?sslmode=require"
+NEON_DATABASE_URL="postgresql://<user>:<password>@<host>:5432/<database>?sslmode=require"
 
 # DagsHub & MLflow Authentication
 DAGSHUB_USERNAME="YOUR_DAGSHUB_USERNAME"

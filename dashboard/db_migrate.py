@@ -4,7 +4,9 @@ from dotenv import load_dotenv
 
 load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 
-url = os.environ.get("NEON_DATABASE_URL", "postgresql://neondb_owner:YOUR_NEON_DATABASE_PASSWORD@ep-flat-shadow-aq6optjf-pooler.c-8.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require")
+url = os.environ.get("NEON_DATABASE_URL", "")
+if not url:
+    raise RuntimeError("NEON_DATABASE_URL is required")
 conn = psycopg2.connect(url)
 cur  = conn.cursor()
 

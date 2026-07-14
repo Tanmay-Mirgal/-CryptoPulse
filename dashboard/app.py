@@ -16,10 +16,7 @@ app      = Flask(__name__)
 app.config["SECRET_KEY"] = "cp-x9k2m-secret"
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading", logger=False, engineio_logger=False)
 
-DB_URL = (
-    os.environ.get("NEON_DATABASE_URL") or
-    "postgresql://neondb_owner:YOUR_NEON_DATABASE_PASSWORD@ep-flat-shadow-aq6optjf-pooler.c-8.us-east-1.aws.neon.tech/neondb?sslmode=require"
-)
+DB_URL = os.environ.get("NEON_DATABASE_URL", "")
 DB_URL = DB_URL.replace("&channel_binding=require", "").replace("?channel_binding=require", "")
 
 DAGSHUB_USER  = os.environ.get("DAGSHUB_USERNAME",  "Tanmay-Mirgal")
@@ -35,6 +32,8 @@ _mlflow_started = False
 
 # ─── DB ───────────────────────────────────────────────────────────────────────
 def db():
+    if not DB_URL:
+        raise RuntimeError("NEON_DATABASE_URL is required")
     last_err = None
     for attempt in range(1, DB_RETRIES + 1):
         try:
