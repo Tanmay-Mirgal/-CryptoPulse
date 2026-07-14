@@ -24,7 +24,7 @@ Astronomer Cloud → Deployments → Your Deployment → Variables:
 
 | Key | Value |
 |-----|-------|
-| `NEON_DATABASE_URL` | `postgresql://neondb_owner:npg_...` |
+| `NEON_DATABASE_URL` | `postgresql://<user>:<password>@<host>:5432/<database>?sslmode=require` |
 | `DAGSHUB_USERNAME` | `Tanmay-Mirgal` |
 | `DAGSHUB_TOKEN` | `302e28608...` |
 | `DAGSHUB_REPO_OWNER` | `Tanmay-Mirgal` |
@@ -94,7 +94,7 @@ To keep your secrets safe, **never** hardcode them. Add them securely via Render
 
 | Key | Value | Description |
 |---|---|---|
-| `NEON_DATABASE_URL` | `postgresql://neondb_owner:YOUR_PASSWORD@ep-flat-...` | Your Neon database connection string |
+| `NEON_DATABASE_URL` | `postgresql://<user>:<password>@<host>:5432/<database>?sslmode=require` | Your Neon database connection string |
 | `DAGSHUB_USERNAME` | `Tanmay-Mirgal` | Your DagsHub username |
 | `DAGSHUB_TOKEN` | `your_dagshub_token` | Your DagsHub access token |
 | `PORT` | `5050` | The port your Flask app runs on (dynamically resolved) |

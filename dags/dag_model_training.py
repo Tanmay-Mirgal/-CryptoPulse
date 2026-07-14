@@ -28,7 +28,7 @@ def _db_url():
     if not url:
         url = os.environ.get("NEON_DATABASE_URL", "")
     if not url:
-        url = "postgresql://neondb_owner:YOUR_NEON_DATABASE_PASSWORD@ep-flat-shadow-aq6optjf-pooler.c-8.us-east-1.aws.neon.tech/neondb?sslmode=require"
+        raise ValueError("NEON_DATABASE_URL is required")
     url = url.replace("&channel_binding=require", "").replace("?channel_binding=require&", "?").replace("?channel_binding=require", "")
     return url
 
